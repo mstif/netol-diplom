@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Книга рецептов</string>
+    <string name="descr_avatar">Аватар</string>
+    <string name="descr_menu">Меню</string>
+    <string name="favorit_button">В избранное</string>
+    <string name="remove">Удалить</string>
+    <string name="menu_edit">Изменить</string>
+    <string name="description_recipe_save">Сохранить</string>
+    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="ToFavorites">В избранное</string>
+    <string name="Favorites">Избранное</string>
+    <string name="add_recipe">Добавить рецепт</string>
+    <string name="FavoritesLabel">В избранном</string>
+    <string name="all_recipes">All recipes</string>
+</resources>

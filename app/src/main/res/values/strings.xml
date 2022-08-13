@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Recipe book</string>
+    <string name="descr_avatar">avatar</string>
+    <string name="descr_menu">Menu</string>
+    <string name="favorit_button">To favorites</string>
+    <string name="remove">Remove</string>
+    <string name="menu_edit">Edit</string>
+    <string name="description_recipe_save">Save</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="ToFavorites">To favorites</string>
+    <string name="Favorites">Favorites</string>
+    <string name="add_recipe">add recipe</string>
+    <string name="FavoritesLabel">Favorites</string>
+    <string name="all_recipes">All recipes</string>
+</resources>
