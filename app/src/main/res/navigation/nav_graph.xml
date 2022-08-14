@@ -9,11 +9,12 @@
         android:id="@+id/feedFragment"
         android:name="ru.netology.nerecipe.FeedFragment"
         android:label="fragment_feed"
-        tools:layout="@layout/fragment_feed" />
-    <activity
-        android:id="@+id/appActivity"
-        android:name="ru.netology.nerecipe.ui.AppActivity"
-        android:label="AppActivity" />
+        tools:layout="@layout/fragment_feed" >
+
+        <action
+            android:id="@+id/action_feedFragment_to_feedFavoritesFragment2"
+            app:destination="@id/feedFavoritesFragment" />
+    </fragment>
     <fragment
         android:id="@+id/feedFavoritesFragment"
         android:name="ru.netology.nerecipe.FeedFavoritesFragment"

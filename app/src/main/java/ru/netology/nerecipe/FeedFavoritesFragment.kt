@@ -10,6 +10,7 @@ import androidx.fragment.app.viewModels
 import ru.netology.nerecipe.databinding.FragmentFeedBinding
 import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
+import ru.netology.nerecipe.databinding.FragmentFavoritesFeedBinding
 
 
 class FeedFavoritesFragment : Fragment() {
@@ -20,7 +21,7 @@ class FeedFavoritesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = FragmentFeedBinding.inflate(layoutInflater, container, false).also { binding ->
+    ): View = FragmentFavoritesFeedBinding.inflate(layoutInflater, container, false).also { binding ->
 
         val adapter = RecipeAdapter(viewModel)
 
