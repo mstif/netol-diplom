@@ -54,12 +54,40 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_spacing"
         android:layout_marginTop="12dp"
+        android:textStyle="bold"
         android:ellipsize="end"
         app:layout_constrainedHeight="true"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/photo"
+        app:layout_constraintTop_toBottomOf="@id/headerBarrier"
 
         tools:text="@tools:sample/lorem" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/category"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/common_spacing"
+        android:layout_marginTop="12dp"
+        android:textStyle="italic"
+        android:ellipsize="end"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/describe"
+
+        tools:text="@tools:sample/lorem" />
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/kitchen"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/foot_horiz_spacing"
+        android:layout_marginTop="12dp"
+        android:textStyle="italic"
+        android:ellipsize="end"
+        app:layout_constrainedHeight="true"
+        app:layout_constraintStart_toEndOf="@id/category"
+        app:layout_constraintTop_toBottomOf="@id/describe"
+        android:text="@string/kitchen"
+         />
 
     <androidx.constraintlayout.widget.Barrier
         android:id="@+id/headerBarrier"
@@ -75,9 +103,10 @@
         android:checked="false"
         android:textOff="@string/ToFavorites"
         android:textOn="@string/FavoritesLabel"
-        app:layout_constraintTop_toBottomOf="@id/describe"
+        app:layout_constraintTop_toBottomOf="@id/photo"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_marginEnd="@dimen/common_spacing"
+        android:layout_marginTop="@dimen/common_spacing"
         android:textStyle="normal"
         style=""
         />
@@ -91,8 +120,8 @@
 
         android:src="@mipmap/recipe_book_photo"
         android:layout_margin="@dimen/common_spacing"
-        app:layout_constraintTop_toBottomOf="@id/headerBarrier"
-        app:layout_constraintBottom_toTopOf="@id/describe"
+        app:layout_constraintTop_toBottomOf="@id/category"
+
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 

@@ -11,7 +11,7 @@ fun RecipeEntity.toModel() = Recipe(
     photoRecipe = photoRecipe,
     stages = stages,
     favorites = favorites,
-    category = RecipeCategory.values().find { it.categoryRus==category }
+    category = category
 )
 
 
@@ -22,5 +22,5 @@ fun Recipe.toEntity() = RecipeEntity(
     photoRecipe = photoRecipe,
     stages = stages,
     favorites = favorites,
-    category = category?.categoryRus?:""
+    category = category
 )

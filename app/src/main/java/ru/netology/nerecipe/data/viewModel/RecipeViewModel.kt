@@ -2,10 +2,11 @@ package ru.netology.nerecipe.data.viewModel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
+import ru.netology.nerecipe.FilterFeed
 
 import ru.netology.nerecipe.Recipe
 
-import ru.netology.nerecipe.adapter.PostInteractionListener
+import ru.netology.nerecipe.adapter.RecipeInteractionListener
 
 
 import ru.netology.nerecipe.data.impl.SqLiteRepository
@@ -17,7 +18,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application),
-    PostInteractionListener {
+    RecipeInteractionListener {
 
     private val repository: RecipeRepository = SqLiteRepository(
         dao = AppDb.getInstance(
@@ -28,8 +29,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     val sharePostContentModel by repository::sharePostContent
     val navigateToRecipeScreenEvent = SingleLiveEvent<String>()
     val navigateToRecipeSingle = SingleLiveEvent<Recipe>()
-    val playVideoFromPost = SingleLiveEvent<String>()
-
+    val filter = SingleLiveEvent<FilterFeed>()
+    var listAllCategories = listOf<String>()
 
     val currentRecipe by repository::currentRecipe
 
@@ -44,9 +45,12 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     }
 
 
-
     override fun onNavigateClicked(recipe: Recipe) {
         navigateToRecipeSingle.value = recipe
+    }
+
+    override fun onChangeFilters(filter: FilterFeed?) {
+        this.filter.value = filter
     }
 
     fun getRecipeById(id: Long): Recipe? = repository.getRecipeById(id)
@@ -56,16 +60,60 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         val url = getVideoUrl(describe)
         val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.getDefault())
 
-        val editedRecipe = currentRecipe.value?.copy(describe = describe, photoRecipe = url) ?: Recipe(
-            id = RecipeRepository.NEW_RECIPE_ID,
-            describe = describe,
-            author = "Me",
-            photoRecipe = url
-        )
+        val editedRecipe =
+            currentRecipe.value?.copy(describe = describe, photoRecipe = url) ?: Recipe(
+                id = RecipeRepository.NEW_RECIPE_ID,
+                describe = describe,
+                author = "Me",
+                photoRecipe = url
+            )
         currentRecipe.value = editedRecipe
         repository.save(editedRecipe)
         // currentPost.value = null
     }
+
+    fun getFilteredResult(
+        recipes: List<Recipe>?,
+        searchText: String?,
+        searchCategory: Array<String>?
+    ): List<Recipe> {
+        val filtered: MutableList<Recipe> = mutableListOf()
+        if(recipes==null) return filtered
+        if (!(searchText==null || searchText.isBlank())) {
+            filtered.addAll( recipes.filter { it.describe.lowercase().contains(searchText.lowercase())
+                    && searchCategory?.contains(it.category)?:true
+            })
+        }else{
+            if(searchCategory!=null && !searchCategory.isEmpty())
+                filtered.addAll(recipes.filter { searchCategory.contains(it.category)})
+            else return recipes
+        }
+
+        return filtered
+    }
+
+    fun getFilteredResultNew(
+       // recipes: List<Recipe>?
+
+    ): List<Recipe> {
+        val filtered: MutableList<Recipe> = mutableListOf()
+        val recipes = dataViewModel.value
+        if(recipes==null) return filtered
+        val searchText = filter.value?.searchText
+        val searchCategory = filter.value?.categories
+        if (!(searchText==null || searchText.isBlank())) {
+            filtered.addAll( recipes.filter { it.describe.lowercase().contains(searchText.lowercase())
+                    && searchCategory?.contains(listAllCategories.indexOf(it.category))?:true
+            })
+        }else{
+            if(searchCategory!=null && !searchCategory.isEmpty())
+                filtered.addAll(recipes.filter { searchCategory.contains(listAllCategories.indexOf(it.category))})
+            else return recipes
+        }
+
+        return filtered
+    }
+
 
 
     fun onAddClicked() {

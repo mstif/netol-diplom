@@ -8,17 +8,17 @@ import android.widget.PopupMenu
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import ru.netology.nerecipe.Recipe
 import ru.netology.nerecipe.R
+import ru.netology.nerecipe.Recipe
 import ru.netology.nerecipe.databinding.RecipeBinding
 
 
 class RecipeAdapter(
 
-    private val interactionListener: PostInteractionListener
+    private val interactionListener: RecipeInteractionListener
 ) : ListAdapter<Recipe, RecipeAdapter.ViewHolder>(DiffCallback) {
 
-    class ViewHolder(private val binding: RecipeBinding, listener: PostInteractionListener) :
+    class ViewHolder(private val binding: RecipeBinding, listener: RecipeInteractionListener) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var recipe: Recipe
         private val popupMenu by lazy {
@@ -60,15 +60,19 @@ class RecipeAdapter(
             this@ViewHolder.recipe = recipe
             describe.text = recipe.describe
             author.text = recipe.author
-            photo.setImageURI(Uri.parse(recipe.photoRecipe))
+            val imageUrl =recipe.photoRecipe
+           // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
+            photo.setImageURI(Uri.parse(imageUrl))
             toggleButtonFavorit.isChecked = recipe.favorites
-
+            recipe.category.also { category.text = it }
             dropdownMenu.setOnClickListener { popupMenu.show() }
             videoGroup.visibility = if (recipe.photoRecipe.isBlank()) View.GONE else View.VISIBLE
 
 
         }
     }
+
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
