@@ -1,5 +1,8 @@
 package ru.netology.nerecipe.db
 
+import kotlinx.serialization.decodeFromString
+import kotlinx.serialization.encodeToString
+import kotlinx.serialization.json.Json
 import ru.netology.nerecipe.Recipe
 import ru.netology.nerecipe.RecipeCategory
 
@@ -9,9 +12,10 @@ fun RecipeEntity.toModel() = Recipe(
     describe = describe,
     author = author,
     photoRecipe = photoRecipe,
-    stages = stages,
+    stages = Json.decodeFromString(stages),
     favorites = favorites,
-    category = category
+    category = category,
+    indexOrder = indexOrder
 )
 
 
@@ -20,7 +24,8 @@ fun Recipe.toEntity() = RecipeEntity(
     describe = describe,
     author = author,
     photoRecipe = photoRecipe,
-    stages = stages,
+    stages = Json.encodeToString(stages),
     favorites = favorites,
-    category = category
+    category = category,
+    indexOrder = indexOrder
 )

@@ -8,9 +8,10 @@ data class Recipe(
     val describe: String = "",
     val author: String = "",
     val favorites: Boolean = false,
-    val stages: String = "",
+    val stages: List<Stage> = listOf(),
     val category: String = "",
-    val photoRecipe: String = ""
+    val photoRecipe: String = "",
+    val indexOrder: Long = 0
 ) {
     companion object {
         fun demoDataRecipe(): List<Recipe> {
@@ -18,25 +19,27 @@ data class Recipe(
 
                 Recipe(
                     id = index.toLong(),
-                    describe = "$index Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                    describe = "$index Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                     author = "$index Всемирная ассоциация любителей поесть",
                     favorites = false,
-                    stages = "",
-                    photoRecipe = "content://com.android.providers.media.documents/document/image%3A27",
-                    category = "Russian"
+
+                   // photoRecipe = "content://com.android.providers.media.documents/document/image%3A27",
+                    category = "Russian",
+                    indexOrder = index.toLong()
                 )
 
 
-            }+List(10) { index ->
+            } + List(10) { index ->
 
                 Recipe(
-                    id = 10+index.toLong(),
-                    describe = "$index Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+                    id = 10 + index.toLong(),
+                    describe = "$index Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
                     author = "$index Всемирная ассоциация любителей поесть",
                     favorites = false,
-                    stages = "",
+
                     photoRecipe = "content://com.android.providers.media.documents/document/image%3A27",
-                    category = "Eastern"
+                    category = "Eastern",
+                    indexOrder = 10 + index.toLong()
                 )
 
 

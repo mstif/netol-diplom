@@ -5,8 +5,10 @@ import androidx.lifecycle.AndroidViewModel
 import ru.netology.nerecipe.FilterFeed
 
 import ru.netology.nerecipe.Recipe
+import ru.netology.nerecipe.Stage
 
 import ru.netology.nerecipe.adapter.RecipeInteractionListener
+import ru.netology.nerecipe.adapter.StageInteractionListener
 
 
 import ru.netology.nerecipe.data.impl.SqLiteRepository
@@ -18,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application),
-    RecipeInteractionListener {
+    RecipeInteractionListener,StageInteractionListener {
 
     private val repository: RecipeRepository = SqLiteRepository(
         dao = AppDb.getInstance(
@@ -27,20 +29,22 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     )
     val dataViewModel by repository::data
     val sharePostContentModel by repository::sharePostContent
-    val navigateToRecipeScreenEvent = SingleLiveEvent<String>()
+    val navigateToRecipeScreenEvent = SingleLiveEvent<Recipe?>()
     val navigateToRecipeSingle = SingleLiveEvent<Recipe>()
     val filter = SingleLiveEvent<FilterFeed>()
     var listAllCategories = listOf<String>()
 
+    val dataStages by repository::stages
+    val navigateToStageScreenEvent=SingleLiveEvent<Stage?>()
     val currentRecipe by repository::currentRecipe
-
+    val currentStage by repository::currentStage
     override fun onLikeClicked(recipe: Recipe) = repository.like(recipe.id)
 
 
     override fun onDeleteClicked(recipe: Recipe) = repository.delete(recipe.id)
     override fun onEditClicked(recipe: Recipe) {
         currentRecipe.value = recipe
-        navigateToRecipeScreenEvent.value = recipe.describe
+        navigateToRecipeScreenEvent.value = recipe
 
     }
 
@@ -117,7 +121,25 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
 
     fun onAddClicked() {
-        navigateToRecipeScreenEvent.call()
+        currentRecipe.value = null
+        navigateToRecipeScreenEvent.value = null
+
+        //navigateToRecipeScreenEvent.call()
+    }
+    fun onAddStageClicked() {
+        currentStage.value = null
+        navigateToStageScreenEvent.value = null
+
+        //navigateToRecipeScreenEvent.call()
+    }
+
+    override fun onSetImage(uri : String){
+        currentStage.value = currentStage.value?.copy(photo = uri)
+    }
+
+
+    fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long){
+        repository.onMoveItem(to,from,recipeToId,recipeFromId)
     }
 
     private fun getVideoUrl(content: String): String {
@@ -133,48 +155,21 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         return ""
     }
 
-
-    fun agoToText(countSec: Int): String {
-        return when (countSec) {
-            in 0..60 -> "только что"
-            in 61..60 * 60 -> {
-                "${periodToString(countSec / 60, TimeUnit.Minutes)} назад"
-            }
-            in 60 * 60 + 1..24 * 60 * 60 -> {
-                "${periodToString(countSec / (60 * 60), TimeUnit.Hours)} назад"
-            }
-            in 24 * 60 * 60 + 1..48 * 60 * 60 -> {
-                "сегодня"
-            }
-            in 48 * 60 * 60 + 1..72 * 60 * 60 -> {
-                "вчера"
-            }
-            else -> "давно"
-        }
+    override fun onLikeClicked(stage: Stage) {
+        TODO("Not yet implemented")
     }
 
-    enum class TimeUnit {
-        Minutes,
-        Hours
+    override fun onDeleteClicked(stage: Stage) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onEditClicked(stage: Stage) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onNavigateClicked(stage: Stage) {
+        TODO("Not yet implemented")
     }
 
 
-    private fun periodToString(countUnits: Int, unit: TimeUnit): String {
-        val lastDigit: Int = countUnits % 10
-        return "$countUnits " + when (unit) {
-            TimeUnit.Minutes -> when (lastDigit) {
-                0, 5, 6, 7, 8, 9 -> "минут"
-                1 -> "минута"
-                2, 3, 4 -> "минуты"
-                else -> ""
-            }
-            TimeUnit.Hours -> when (lastDigit) {
-                0, 5, 6, 7, 8, 9 -> "часов"
-                1 -> "час"
-                2, 3, 4 -> "часа"
-                else -> ""
-            }
-
-        }
-    }
 }

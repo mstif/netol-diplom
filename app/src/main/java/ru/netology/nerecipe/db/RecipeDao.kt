@@ -21,6 +21,7 @@ interface RecipeDao {
     @Query("UPDATE recipes SET describe = :describe, photoRecipe = :photoRecipe, stages = :stages WHERE id = :id")
     fun updateRecipeById(id: Long, describe: String, photoRecipe: String, stages: String)
 
+
     fun save(recipe: RecipeEntity) =
         if (recipe.id == RecipeRepository.NEW_RECIPE_ID) insert(recipe) else
             updateRecipeById(recipe.id, recipe.describe, recipe.photoRecipe, recipe.stages)
@@ -35,6 +36,17 @@ interface RecipeDao {
 
     @Query("DELETE FROM recipes WHERE id=:id")
     fun removeById(id: Long)
+
+
+    @Query(
+        """
+        UPDATE recipes SET indexOrder =   indexOrder+:direction
+        WHERE id= :idItem
+    """
+    )
+    fun reorderItems(direction: Int, idItem: Long) {
+
+    }
 
 
 }

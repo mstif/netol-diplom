@@ -1,8 +1,10 @@
 package ru.netology.nerecipe.data.impl
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.map
 import ru.netology.nerecipe.Recipe
+import ru.netology.nerecipe.Stage
 import ru.netology.nerecipe.data.RecipeRepository
 
 
@@ -14,20 +16,19 @@ import x.y.z.SingleLiveEvent
 
 class SqLiteRepository(private val dao: RecipeDao) : RecipeRepository {
 
-//    override val data = dao.getAll().map { entities ->
-//        entities.map { it.toModel() }
-//    }
-    override val data = MutableLiveData(Recipe.demoDataRecipe())
-
+       override val data = dao.getAll().map { entities ->
+           entities.map { it.toModel() }
+   }
+//    override val data = MutableLiveData(Recipe.demoDataRecipe())
+    override val stages = MutableLiveData(Stage.demoDataStages())
     override val sharePostContent = SingleLiveEvent<String>()
     override val currentRecipe = MutableLiveData<Recipe?>(null)
-
+    override val currentStage = MutableLiveData<Stage?>(null)
 
     override fun like(id: Long) {
         dao.toFavoriteById(id)
 
     }
-
 
 
     override fun delete(id: Long) {
@@ -52,6 +53,15 @@ class SqLiteRepository(private val dao: RecipeDao) : RecipeRepository {
     override fun getRecipeById(id: Long): Recipe {
         val p = dao.getRecipeById(id).toModel()
         return p
+    }
+
+    override fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long) {
+        if (to == from) return
+
+        dao.reorderItems(if (to < from) -1 else 1, recipeFromId)
+        dao.reorderItems(if (to < from) 1 else -1, recipeToId)
+
+
     }
 
 }

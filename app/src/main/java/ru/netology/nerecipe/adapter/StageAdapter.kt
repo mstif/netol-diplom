@@ -10,28 +10,30 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nerecipe.R
 import ru.netology.nerecipe.Recipe
+import ru.netology.nerecipe.Stage
 import ru.netology.nerecipe.databinding.RecipeBinding
+import ru.netology.nerecipe.databinding.StageBinding
 
 
-class RecipeAdapter(
+class StageAdapter(
 
-    private val interactionListener: RecipeInteractionListener
-) : ListAdapter<Recipe, RecipeAdapter.ViewHolder>(DiffCallback) {
+    private val interactionListener: StageInteractionListener
+) : ListAdapter<Stage, StageAdapter.ViewHolder>(DiffCallback) {
 
-    class ViewHolder(private val binding: RecipeBinding, listener: RecipeInteractionListener) :
+    class ViewHolder(private val binding: StageBinding, listener: StageInteractionListener) :
         RecyclerView.ViewHolder(binding.root) {
-        private lateinit var recipe: Recipe
+        private lateinit var stage: Stage
         private val popupMenu by lazy {
             PopupMenu(itemView.context, binding.dropdownMenu).apply {
                 inflate(R.menu.option_recipe)
                 this.setOnMenuItemClickListener { menuItems ->
                     when (menuItems.itemId) {
                         R.id.remove -> {
-                            listener.onDeleteClicked(recipe)
+                            listener.onDeleteClicked(stage)
                             true
                         }
                         R.id.menu_edit -> {
-                            listener.onEditClicked(recipe)
+                            listener.onEditClicked(stage)
                             true
                         }
                         else -> false
@@ -41,32 +43,19 @@ class RecipeAdapter(
             }
         }
 
-        init {
-            binding.toggleButtonFavorit.setOnClickListener {
-                listener.onLikeClicked(recipe)
-            }
 
-            binding.photo.setOnClickListener {
-                listener.onNavigateClicked(recipe)
-            }
 
-            binding.describe.setOnClickListener {
-                listener.onNavigateClicked(recipe)
-            }
-
-        }
-
-        fun bind(recipe: Recipe) = with(binding) {
-            this@ViewHolder.recipe = recipe
-            describe.text = recipe.describe
-            author.text = recipe.author
-            val imageUrl =recipe.photoRecipe
+        fun bind(stage: Stage) = with(binding) {
+            this@ViewHolder.stage = stage
+            textStage.text = stage.content
+            stageNumber.text = stage.position.toString()
+            val imageUrl =stage.photo
            // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
             photo.setImageURI(Uri.parse(imageUrl))
-            toggleButtonFavorit.isChecked = recipe.favorites
-            recipe.category.also { category.text = it }
+
+
             dropdownMenu.setOnClickListener { popupMenu.show() }
-            videoGroup.visibility = if (recipe.photoRecipe.isBlank()) View.GONE else View.VISIBLE
+            photo.visibility = if (stage.photo.isBlank()) View.GONE else View.VISIBLE
 
 
         }
@@ -76,7 +65,7 @@ class RecipeAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
-        val binding = RecipeBinding.inflate(inflater, parent, false)
+        val binding = StageBinding.inflate(inflater, parent, false)
         return ViewHolder(binding, interactionListener)
     }
 
@@ -90,13 +79,13 @@ class RecipeAdapter(
     }
 
 
-    private object DiffCallback : DiffUtil.ItemCallback<Recipe>() {
-        override fun areItemsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
+    private object DiffCallback : DiffUtil.ItemCallback<Stage>() {
+        override fun areItemsTheSame(oldItem: Stage, newItem: Stage): Boolean {
             return oldItem.id == newItem.id
         }
 
-        override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-            return oldItem == newItem
+        override fun areContentsTheSame(oldItem: Stage, newItem: Stage): Boolean {
+            return oldItem.content == newItem.content
         }
 
     }

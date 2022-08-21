@@ -1,8 +1,6 @@
 package ru.netology.nerecipe
 
-import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.core.view.MenuHost
@@ -12,17 +10,63 @@ import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.google.android.material.chip.Chip
+import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.*
+import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nerecipe.databinding.FragmentFeedBinding
 import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
-import ru.netology.nerecipe.databinding.ChipBinding
 
 
 class FeedFragment : Fragment() {
 
     val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
     private lateinit var adapter: RecipeAdapter
+
+    private val itemTouchHelper by lazy {
+        val simpleItemTouchCallback =
+            object : ItemTouchHelper.SimpleCallback(UP or DOWN or START or END, 0) {
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val adapter = recyclerView.adapter as RecipeAdapter
+                    val from = viewHolder.absoluteAdapterPosition
+                    val to = target.absoluteAdapterPosition
+                    viewModel.onMoveItem(from,to,adapter.getRecipeId(from),adapter.getRecipeId(to))
+                    adapter.notifyItemMoved(from, to)
+
+                    return true
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                }
+
+                override fun onSelectedChanged(
+                    viewHolder: RecyclerView.ViewHolder?,
+                    actionState: Int
+                ) {
+                    super.onSelectedChanged(viewHolder, actionState)
+
+                    if (actionState == ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.5f
+                    }
+                }
+
+                override fun clearView(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ) {
+                    super.clearView(recyclerView, viewHolder)
+
+                    viewHolder.itemView.alpha = 1.0f
+                }
+            }
+
+        ItemTouchHelper(simpleItemTouchCallback)
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -31,10 +75,10 @@ class FeedFragment : Fragment() {
     ): View = FragmentFeedBinding.inflate(layoutInflater, container, false).also { binding ->
 
         adapter = RecipeAdapter(viewModel)
-
+        itemTouchHelper.attachToRecyclerView(binding.container)
         binding.container.adapter = adapter
         viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
-           // adapter.submitList(recipes)
+            // adapter.submitList(recipes)
             val filteredResult = viewModel.getFilteredResultNew()
             adapter.submitList(filteredResult)
         }
@@ -48,8 +92,8 @@ class FeedFragment : Fragment() {
             val categories =
                 bundle.getIntegerArrayList(RESULT_CATEGORY_KEY) ?: return@setFragmentResultListener
             // val listCategories = categories.split(";")
-            val filterFeed = viewModel.filter.value?.copy(categories = categories)?:
-            FilterFeed("",categories)
+            val filterFeed =
+                viewModel.filter.value?.copy(categories = categories) ?: FilterFeed("", categories)
 
             viewModel.onChangeFilters(filterFeed)
             //viewModel.currentPost.value = null
@@ -89,8 +133,10 @@ class FeedFragment : Fragment() {
 
                         //adapter.submitList(filteredResult)
 
-                        val filterFeed = viewModel.filter.value?.copy(searchText = searchText?: "")?:
-                        FilterFeed(searchText?: "",List(categoriesList.size){index -> index })
+                        val filterFeed = viewModel.filter.value?.copy(searchText = searchText ?: "")
+                            ?: FilterFeed(
+                                searchText ?: "",
+                                List(categoriesList.size) { index -> index })
 
                         viewModel.onChangeFilters(filterFeed)
                         return false
@@ -102,9 +148,11 @@ class FeedFragment : Fragment() {
 //                            searchText,
 //                            null
 //                        )
-                       // adapter.submitList(filteredResult)
-                        val filterFeed = viewModel.filter.value?.copy(searchText = searchText?: "")?:
-                        FilterFeed(searchText?: "",List(categoriesList.size){index -> index })
+                        // adapter.submitList(filteredResult)
+                        val filterFeed = viewModel.filter.value?.copy(searchText = searchText ?: "")
+                            ?: FilterFeed(
+                                searchText ?: "",
+                                List(categoriesList.size) { index -> index })
 
                         viewModel.onChangeFilters(filterFeed)
                         return true
@@ -135,23 +183,39 @@ class FeedFragment : Fragment() {
 
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val categoriesList = resources.getStringArray(R.array.categories).toList()
         viewModel.listAllCategories = categoriesList
-        viewModel.filter.value = FilterFeed("", List<Int>(categoriesList.size){index -> index })
+        viewModel.filter.value = FilterFeed("", List<Int>(categoriesList.size) { index -> index })
+
         viewModel.filter.observe(this) {
             val filteredResult = viewModel.getFilteredResultNew(
-               // viewModel.dataViewModel.value
+                // viewModel.dataViewModel.value
 
             )
             adapter.submitList(filteredResult)
         }
 
+        viewModel.navigateToRecipeSingle.observe(this) { recipeToSingle ->
+            viewModel.currentRecipe.value = recipeToSingle
+            findNavController().navigate(
+                R.id.singleRecipe,
+                SingleRecipeFragment.createBundle(recipeToSingle.id)
+            )
+        }
+        viewModel.navigateToRecipeScreenEvent.observe(this) { recipeToEdit ->
+            findNavController().navigate(
+                R.id.action_feedFragment_to_editRecipe,
+                EditRecipe.createBundle(recipeToEdit?.id ?: 0)
+            )
+        }
+
     }
 
     companion object {
-        const val RESULT_CATEGORY_KEY = "ResultCategoryKey"
+        const val RESULT_CATEGORY_KEY = "resultCategoryKey"
         const val REQUEST_CATEGORY_KEY = "requestCategoryKey"
         const val REQUEST_KEY_SINGLE = "singlePost"
         const val INITIAL_CONTENT_KEY = "initialContent"

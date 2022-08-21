@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".StageFragment">
+
+    <!-- TODO: Update blank fragment layout -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_page"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="Editing stage "
+        android:layout_margin="@dimen/common_spacing"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="bold"
+        android:textSize="20dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/title_number"
+        app:layout_constraintTop_toBottomOf="@id/title_page"
+        android:text="Stage № "
+        android:layout_margin="@dimen/common_spacing"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textStyle="italic"
+        />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/stage_number"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="1"
+        android:layout_marginTop="@dimen/common_spacing"
+        android:layout_marginLeft="4dp"
+        app:layout_constraintStart_toEndOf="@id/title_number"
+        android:textStyle="italic"
+        />
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/text_stage_edit"
+        app:layout_constraintTop_toBottomOf="@id/title_number"
+        tools:text="Берем и мелко шинкуем три мухомора, тщательно контролируя уровень воды в долине Нила"
+        android:layout_margin="@dimen/common_spacing"
+
+        />
+    <ImageButton
+        android:id="@+id/set_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/common_spacing"
+        android:background="@android:color/transparent"
+        android:contentDescription="Set picture"
+        android:minWidth="48dp"
+        android:minHeight="48dp"
+        android:tooltipText="Set picture"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_stage_edit"
+        app:srcCompat="@drawable/ic_baseline_image_24" />
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:layout_width="@dimen/width_photo_pic"
+        android:layout_height="@dimen/height_photo_pic"
+        android:id="@+id/stage_image"
+        app:layout_constraintTop_toBottomOf="@id/set_image"
+        android:layout_margin="@dimen/common_spacing"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:src="@mipmap/recipe_book_photo"
+
+        tools:contentDescription="TODO" />
+
+    <com.google.android.material.bottomappbar.BottomAppBar
+        android:id="@+id/bottomAppBar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
+        tools:ignore="BottomAppBar" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/ok"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="Recipe save"
+        app:srcCompat="@drawable/ic_baseline_check_24"
+        app:layout_anchor="@id/bottomAppBar"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

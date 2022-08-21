@@ -17,5 +17,8 @@ class RecipeEntity(
     val favorites: Boolean ,
     val stages:String,
     val photoRecipe: String,
-    val category: String
+    val category: String,
+    val indexOrder :Long
 )
+
+class StageEntity
