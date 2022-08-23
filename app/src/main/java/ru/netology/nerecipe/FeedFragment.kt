@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nerecipe.databinding.FragmentFeedBinding
 import ru.netology.nerecipe.adapter.RecipeAdapter
+import ru.netology.nerecipe.data.RecipeRepository
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
 
 
@@ -77,13 +78,19 @@ class FeedFragment : Fragment() {
         adapter = RecipeAdapter(viewModel)
         itemTouchHelper.attachToRecyclerView(binding.container)
         binding.container.adapter = adapter
+
+
+
         viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
             // adapter.submitList(recipes)
             val filteredResult = viewModel.getFilteredResultNew()
             adapter.submitList(filteredResult)
         }
+
+
+
         binding.fab.setOnClickListener {
-            viewModel.currentRecipe.value = null
+            viewModel.currentRecipe.value = Recipe()
             viewModel.onAddClicked()
         }
 
@@ -208,8 +215,15 @@ class FeedFragment : Fragment() {
         viewModel.navigateToRecipeScreenEvent.observe(this) { recipeToEdit ->
             findNavController().navigate(
                 R.id.action_feedFragment_to_editRecipe,
-                EditRecipe.createBundle(recipeToEdit?.id ?: 0)
+                EditRecipe.createBundle(recipeToEdit?.id ?: RecipeRepository.NEW_RECIPE_ID)
             )
+        }
+
+        setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, bundle ->
+            if (requestKey != EditRecipe.REQUEST_KEY_CHAHGE) return@setFragmentResultListener
+
+            viewModel.onSaveButtonClicked()
+            viewModel.currentRecipe.value = null
         }
 
     }

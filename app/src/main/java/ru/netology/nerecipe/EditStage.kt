@@ -10,9 +10,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.widget.AppCompatImageView
+import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
-import ru.netology.nerecipe.databinding.FragmentEditRecipeBinding
+
 import ru.netology.nerecipe.databinding.FragmentEditStageBinding
 
 // TODO: Rename parameter arguments, choose names that match
@@ -50,39 +52,63 @@ class EditStage : Fragment() {
         stage = viewModel.currentStage.value ?: Stage()
 
 
-        val binding = FragmentEditStageBinding.inflate(layoutInflater, container, false).also { binding ->
-            with(binding) {
+        val binding =
+            FragmentEditStageBinding.inflate(layoutInflater, container, false).also { binding ->
+                with(binding) {
 
-                bind(binding)
+                    bind(binding)
 
 
-            }
-        }
-
-        val selectImageFromGalleryResult = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
-            uri?.let {
-               val uridb =copyToDb(uri)
-                stage = stage.copy(photo = uridb.toString())
-                bind(binding)
-                viewModel.onSetImage(uridb.toString())
+                }
             }
 
-        }
+        val selectImageFromGalleryResult =
+            registerForActivityResult(ActivityResultContracts.OpenDocument()) { uri: Uri? ->
+                uri?.let {
+                    requireActivity().contentResolver.takePersistableUriPermission(
+                        uri,
+                        Intent.FLAG_GRANT_READ_URI_PERMISSION
+                    )
+
+                    val uridb = copyToDb(uri)
+                    stage = stage.copy(photo = uridb.toString())
+                    bind(binding)
+                    viewModel.onSetImage(uridb.toString())
+                }
+
+            }
 
         binding.setImage.setOnClickListener {
 
-            selectImageFromGalleryResult.launch("image/*")
+            selectImageFromGalleryResult.launch(arrayOf("image/*"))
 
         }
 
-        binding.ok.setOnClickListener{
+        binding.ok.setOnClickListener {
+            val text = binding.textStageEdit.text
+
+            if (!text.isNullOrBlank()) {
+                val resultBundle = Bundle(2)
+                resultBundle.putString(RESULT_KEY_DESCRIBE, text.toString())
+                resultBundle.putString(RESULT_KEY_PHOTO, stage.photo)
+                setFragmentResult(requestKey = STAGE_KEY_REQUEST, resultBundle)
+                stage = stage.copy(content = text.toString())
+
+
+            }
+            //viewModel.currentStage.value = stage
+            val recipe = viewModel.currentRecipe.value
+            val stages = (recipe?.stages ?: listOf()) + stage
+            viewModel.currentRecipe.value = recipe?.copy(stages = stages)
+            viewModel.dataStages.value = stages
+            findNavController().popBackStack()
 
         }
 
         return binding.root
     }
 
-    private fun copyToDb(uri: Uri):Uri {
+    private fun copyToDb(uri: Uri): Uri {
         return uri
     }
 
@@ -91,25 +117,21 @@ class EditStage : Fragment() {
         // val post = viewModel.dataViewModel.value?.find { it.id == idPost }
         stageNumber.text = stage.position.toString()
         textStageEdit.setText(stage.content)
-        val imageUrl =stage.photo
+        val imageUrl = stage.photo
         // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
         stageImage.setImageURI(Uri.parse(imageUrl))
 
 
-       stageImage.visibility = if (stage.photo.isBlank()) View.GONE else View.VISIBLE
+        stageImage.visibility = if (stage.photo.isBlank()) View.GONE else View.VISIBLE
 
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EditStage.
-         */
-        // TODO: Rename and change types and number of parameters
+
+        const val STAGE_KEY_REQUEST = "stage change"
+        const val RESULT_KEY_PHOTO = "key photo stage"
+        const val RESULT_KEY_DESCRIBE = "key text stage"
+
         @JvmStatic
         fun newInstance(param1: String, param2: String) =
             EditStage().apply {

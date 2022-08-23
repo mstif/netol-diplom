@@ -10,15 +10,22 @@ import ru.netology.nerecipe.RecipeCategory
 class RecipeEntity(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "id")
-    val id: Long ,
-    val describe: String ,
-    val author: String ,
+    val id: Long = -1L,
+    val describe: String = "",
+    val author: String = "" ,
     @ColumnInfo(name = "favorites")
-    val favorites: Boolean ,
-    val stages:String,
-    val photoRecipe: String,
-    val category: String,
-    val indexOrder :Long
+    val favorites: Boolean = false ,
+    val stages:String = "",
+    val photoRecipe: String="",
+    val category: String="",
+    val indexOrder :Long=0L
 )
 
-class StageEntity
+ @Entity(tableName="condition")
+ class ConditionEntity(
+     @PrimaryKey
+     val id:String,
+     val maxIdStages: Long ,
+     val filterCategory: String
+     )
+

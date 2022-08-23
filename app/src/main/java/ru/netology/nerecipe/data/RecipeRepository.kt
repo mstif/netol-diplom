@@ -12,7 +12,8 @@ interface RecipeRepository {
     val sharePostContent:SingleLiveEvent<String>
     val currentRecipe:MutableLiveData<Recipe?>
     val currentStage:MutableLiveData<Stage?>
-    val stages:LiveData < List<Stage>>
+    val stages:MutableLiveData < List<Stage>>
+   // val stages: List<Stage>
    // val currentSinglePost:MutableLiveData<Post?>
     fun like(id:Long)
     fun delete(id: Long)

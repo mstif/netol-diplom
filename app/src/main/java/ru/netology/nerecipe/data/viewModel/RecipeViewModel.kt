@@ -35,6 +35,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     var listAllCategories = listOf<String>()
 
     val dataStages by repository::stages
+    //val dataStages = repository.stages
     val navigateToStageScreenEvent=SingleLiveEvent<Stage?>()
     val currentRecipe by repository::currentRecipe
     val currentStage by repository::currentStage
@@ -45,6 +46,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     override fun onEditClicked(recipe: Recipe) {
         currentRecipe.value = recipe
         navigateToRecipeScreenEvent.value = recipe
+
 
     }
 
@@ -59,21 +61,20 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     fun getRecipeById(id: Long): Recipe? = repository.getRecipeById(id)
 
-    fun onSaveButtonClicked(describe: String) {
-        if (describe.isBlank()) return
-        val url = getVideoUrl(describe)
+    fun onSaveButtonClicked() {
+
         val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.getDefault())
 
         val editedRecipe =
-            currentRecipe.value?.copy(describe = describe, photoRecipe = url) ?: Recipe(
+            currentRecipe.value?.copy(author = "Me") ?: Recipe(
                 id = RecipeRepository.NEW_RECIPE_ID,
-                describe = describe,
+
                 author = "Me",
-                photoRecipe = url
+
             )
         currentRecipe.value = editedRecipe
         repository.save(editedRecipe)
-        // currentPost.value = null
+
     }
 
     fun getFilteredResult(
@@ -122,12 +123,13 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     fun onAddClicked() {
         currentRecipe.value = null
+
         navigateToRecipeScreenEvent.value = null
 
         //navigateToRecipeScreenEvent.call()
     }
     fun onAddStageClicked() {
-        currentStage.value = null
+        currentStage.value = Stage()
         navigateToStageScreenEvent.value = null
 
         //navigateToRecipeScreenEvent.call()

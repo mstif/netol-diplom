@@ -9,6 +9,7 @@ import ru.netology.nerecipe.data.RecipeRepository
 
 
 import ru.netology.nerecipe.db.RecipeDao
+import ru.netology.nerecipe.db.RecipeEntity
 import ru.netology.nerecipe.db.toEntity
 import ru.netology.nerecipe.db.toModel
 
@@ -20,10 +21,15 @@ class SqLiteRepository(private val dao: RecipeDao) : RecipeRepository {
            entities.map { it.toModel() }
    }
 //    override val data = MutableLiveData(Recipe.demoDataRecipe())
-    override val stages = MutableLiveData(Stage.demoDataStages())
+
     override val sharePostContent = SingleLiveEvent<String>()
     override val currentRecipe = MutableLiveData<Recipe?>(null)
     override val currentStage = MutableLiveData<Stage?>(null)
+
+   //override val stages =
+    //    MutableLiveData(dao.getRecipeById(currentRecipe.value?.id?:0L).toModel().stages)
+    override val stages = MutableLiveData<List<Stage>>(null)
+
 
     override fun like(id: Long) {
         dao.toFavoriteById(id)
