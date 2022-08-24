@@ -12,7 +12,10 @@ import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.adapter.StageAdapter
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
 import ru.netology.nerecipe.databinding.FragmentEditRecipeBinding
@@ -30,6 +33,60 @@ class EditRecipe : Fragment() {
 
     private var idRecipe: Long = 0
     private lateinit var recipe: Recipe
+
+    private val itemTouchHelper by lazy {
+        val simpleItemTouchCallback =
+            object : ItemTouchHelper.SimpleCallback(
+                ItemTouchHelper.UP or ItemTouchHelper.DOWN or ItemTouchHelper.START or ItemTouchHelper.END,
+                0
+            ) {
+
+                override fun onMove(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder,
+                    target: RecyclerView.ViewHolder
+                ): Boolean {
+                    val adapter = recyclerView.adapter as StageAdapter
+                    val from = viewHolder.absoluteAdapterPosition
+                    val to = target.absoluteAdapterPosition
+                    viewModel.onMoveItemStage(
+                        from,
+                        to,
+                        adapter.getStagebyPosition(from).id,
+                        adapter.getStagebyPosition(to).id
+                    )
+                    adapter.notifyItemMoved(from, to)
+
+                    return true
+                }
+
+                override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
+                }
+
+                override fun onSelectedChanged(
+                    viewHolder: RecyclerView.ViewHolder?,
+                    actionState: Int
+                ) {
+                    super.onSelectedChanged(viewHolder, actionState)
+
+                    if (actionState == ItemTouchHelper.ACTION_STATE_DRAG) {
+                        viewHolder?.itemView?.alpha = 0.5f
+                    }
+                }
+
+                override fun clearView(
+                    recyclerView: RecyclerView,
+                    viewHolder: RecyclerView.ViewHolder
+                ) {
+                    super.clearView(recyclerView, viewHolder)
+
+                    viewHolder.itemView.alpha = 1.0f
+                }
+            }
+
+        ItemTouchHelper(simpleItemTouchCallback)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -37,10 +94,10 @@ class EditRecipe : Fragment() {
 
         }
 
-        viewModel.navigateToStageScreenEvent.observe(this){stage->
+        viewModel.navigateToStageScreenEvent.observe(this) { stage ->
             findNavController().navigate(
                 R.id.action_editRecipe_to_editStage,
-                StageFragment.createBundle(stage?.id?:0L)
+                StageFragment.createBundle(stage?.id ?: 0L)
             )
         }
 
@@ -48,7 +105,7 @@ class EditRecipe : Fragment() {
             if (requestKey != EditStage.STAGE_KEY_REQUEST) return@setFragmentResultListener
 
             //viewModel.onSaveButtonClicked()
-           // viewModel.currentRecipe.value = null
+            // viewModel.currentRecipe.value = null
         }
     }
 
@@ -57,19 +114,21 @@ class EditRecipe : Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
-         recipe = viewModel.currentRecipe.value ?: Recipe()
+        recipe = viewModel.currentRecipe.value ?: Recipe()
 
 
-        val binding = FragmentEditRecipeBinding.inflate(layoutInflater, container, false).also { binding ->
-            with(binding) {
+        val binding =
+            FragmentEditRecipeBinding.inflate(layoutInflater, container, false).also { binding ->
+                with(binding) {
 
-                bind(binding)
+                    bind(binding)
 
 
+                }
             }
-        }
+        itemTouchHelper.attachToRecyclerView(binding.container)
         binding.fabStage.setOnClickListener {
-
+            viewModel.currentRecipe.value = recipe
             viewModel.onAddStageClicked()
         }
 
@@ -94,10 +153,10 @@ class EditRecipe : Fragment() {
 //            viewModel.currentRecipe.value = recipe
 //        }
 
-        binding.ok.setOnClickListener{
+        binding.ok.setOnClickListener {
             val text = binding.recipeDescribe.text
             val category = binding.spinner.selectedItem.toString()
-            recipe = recipe.copy(category = category)
+
             if (!text.isNullOrBlank()) {
                 val resultBundle = Bundle(2)
                 resultBundle.putString(RESULT_KEY_DESCRIBE, text.toString())
@@ -107,12 +166,13 @@ class EditRecipe : Fragment() {
 
 
             }
+            recipe = recipe.copy(category = category,stages = viewModel.dataStages.value ?: listOf())
             viewModel.currentRecipe.value = recipe
             findNavController().popBackStack()
         }
 
 
-        val adapter = StageAdapter(viewModel)
+        val adapter = StageAdapter(viewModel, true)
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
@@ -121,7 +181,7 @@ class EditRecipe : Fragment() {
         binding.container.adapter = adapter
 
         viewModel.dataStages.observe(viewLifecycleOwner) { stages ->
-            adapter.submitList(stages)
+            adapter.submitList(stages.sortedBy { it.position })
         }
         viewModel.dataStages.value = recipe.stages
         return binding.root
@@ -166,6 +226,7 @@ class EditRecipe : Fragment() {
         fun createBundle(postId: Long) = Bundle(1).apply {
             putLong(INITIAL_RECIPE_KEY, postId)
         }
+
         // TODO: Rename and change types and number of parameters
         @JvmStatic
         fun newInstance(param1: String, param2: String) =

@@ -20,7 +20,7 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application),
-    RecipeInteractionListener,StageInteractionListener {
+    RecipeInteractionListener, StageInteractionListener {
 
     private val repository: RecipeRepository = SqLiteRepository(
         dao = AppDb.getInstance(
@@ -35,8 +35,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     var listAllCategories = listOf<String>()
 
     val dataStages by repository::stages
+
     //val dataStages = repository.stages
-    val navigateToStageScreenEvent=SingleLiveEvent<Stage?>()
+    val navigateToStageScreenEvent = SingleLiveEvent<Stage?>()
     val currentRecipe by repository::currentRecipe
     val currentStage by repository::currentStage
     override fun onLikeClicked(recipe: Recipe) = repository.like(recipe.id)
@@ -71,7 +72,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
                 author = "Me",
 
-            )
+                )
         currentRecipe.value = editedRecipe
         repository.save(editedRecipe)
 
@@ -83,14 +84,15 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         searchCategory: Array<String>?
     ): List<Recipe> {
         val filtered: MutableList<Recipe> = mutableListOf()
-        if(recipes==null) return filtered
-        if (!(searchText==null || searchText.isBlank())) {
-            filtered.addAll( recipes.filter { it.describe.lowercase().contains(searchText.lowercase())
-                    && searchCategory?.contains(it.category)?:true
+        if (recipes == null) return filtered
+        if (!(searchText == null || searchText.isBlank())) {
+            filtered.addAll(recipes.filter {
+                it.describe.lowercase().contains(searchText.lowercase())
+                        && searchCategory?.contains(it.category) ?: true
             })
-        }else{
-            if(searchCategory!=null && !searchCategory.isEmpty())
-                filtered.addAll(recipes.filter { searchCategory.contains(it.category)})
+        } else {
+            if (searchCategory != null && !searchCategory.isEmpty())
+                filtered.addAll(recipes.filter { searchCategory.contains(it.category) })
             else return recipes
         }
 
@@ -98,27 +100,33 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     }
 
     fun getFilteredResultNew(
-       // recipes: List<Recipe>?
+        // recipes: List<Recipe>?
 
     ): List<Recipe> {
         val filtered: MutableList<Recipe> = mutableListOf()
         val recipes = dataViewModel.value
-        if(recipes==null) return filtered
+        if (recipes == null) return filtered
         val searchText = filter.value?.searchText
         val searchCategory = filter.value?.categories
-        if (!(searchText==null || searchText.isBlank())) {
-            filtered.addAll( recipes.filter { it.describe.lowercase().contains(searchText.lowercase())
-                    && searchCategory?.contains(listAllCategories.indexOf(it.category))?:true
+        if (!(searchText == null || searchText.isBlank())) {
+            filtered.addAll(recipes.filter {
+                it.describe.lowercase().contains(searchText.lowercase())
+                        && searchCategory?.contains(listAllCategories.indexOf(it.category)) ?: true
             })
-        }else{
-            if(searchCategory!=null && !searchCategory.isEmpty())
-                filtered.addAll(recipes.filter { searchCategory.contains(listAllCategories.indexOf(it.category))})
+        } else {
+            if (searchCategory != null && !searchCategory.isEmpty())
+                filtered.addAll(recipes.filter {
+                    searchCategory.contains(
+                        listAllCategories.indexOf(
+                            it.category
+                        )
+                    )
+                })
             else return recipes
         }
 
         return filtered
     }
-
 
 
     fun onAddClicked() {
@@ -128,6 +136,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
         //navigateToRecipeScreenEvent.call()
     }
+
     fun onAddStageClicked() {
         currentStage.value = Stage()
         navigateToStageScreenEvent.value = null
@@ -135,14 +144,40 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         //navigateToRecipeScreenEvent.call()
     }
 
-    override fun onSetImage(uri : String){
+    override fun onSetImage(uri: String) {
         currentStage.value = currentStage.value?.copy(photo = uri)
     }
 
+    fun nextIdStages():Long {
+       return repository.nextIdStages()
 
-    fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long){
-        repository.onMoveItem(to,from,recipeToId,recipeFromId)
     }
+
+
+    fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long) {
+        repository.onMoveItem(to, from, recipeToId, recipeFromId)
+    }
+
+    fun onMoveItemStage(to: Int, from: Int, recipeToId: Long, recipeFromId: Long) {
+        val list = dataStages.value?.toMutableList()
+        if (list == null) return
+        val fromLocation = list[from].copy(position = to)
+        val toLocation = list[to].copy(position = from)
+        //list.removeAt(from)
+        list[from] = fromLocation
+        list[to] = toLocation
+        dataStages.value = list
+//        if (to < from) {
+//            //+1 because it start from 0 on the upside. otherwise it will not change the locations accordingly
+//            list.add(to + 1 , fromLocation)
+//        } else {
+//            //-1 because it start from length + 1 on the down side. otherwise it will not change the locations accordingly
+//            list.add(to - 1, fromLocation)
+//        }
+//        differ.submitList(list)
+
+    }
+
 
     private fun getVideoUrl(content: String): String {
         val startIndex = content.indexOf("http")

@@ -20,6 +20,7 @@ interface RecipeRepository {
     fun save(recipe: Recipe)
     fun getRecipeById(id:Long): Recipe?
     fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long)
+    fun nextIdStages():Long
     companion object{
         const val NEW_RECIPE_ID = 0L
     }

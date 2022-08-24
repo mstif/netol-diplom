@@ -56,6 +56,8 @@ interface RecipeDao {
     """
     )
     fun reorderItems(direction: Int, idItem: Long)
+    
+    // get id stages
 
     @Query("SELECT maxIdStages FROM condition ")
     fun getMaxIdofStages(): Long?
@@ -71,8 +73,9 @@ interface RecipeDao {
             updateConditionDefault(id)
 
 
-    fun nextIdStages(){
+    fun nextIdStages():Long{
         val id = (getMaxIdofStages()?:0L) + 1L
         updateIdStages(id)
+        return id
     }
 }

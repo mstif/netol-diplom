@@ -70,4 +70,8 @@ class SqLiteRepository(private val dao: RecipeDao) : RecipeRepository {
 
     }
 
+    override fun nextIdStages():Long {
+        return dao.nextIdStages()
+    }
+
 }

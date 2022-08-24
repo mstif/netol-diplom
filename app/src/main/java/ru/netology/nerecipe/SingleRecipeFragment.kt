@@ -57,7 +57,7 @@ class SingleRecipeFragment : Fragment() {
 
                 }
             }
-        val adapter = StageAdapter(viewModel)
+        val adapter = StageAdapter(viewModel,false)
 
         val linearLayoutManager = LinearLayoutManager(context)
         linearLayoutManager.orientation = LinearLayoutManager.VERTICAL

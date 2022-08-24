@@ -49,7 +49,12 @@ class EditStage : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        stage = viewModel.currentStage.value ?: Stage()
+        val listStages = viewModel.currentRecipe.value?.stages
+        val maxPosition =
+            if (listStages.isNullOrEmpty()) 0 else listStages.maxOf { it.position } + 1
+        stage = (viewModel.currentStage.value ?: Stage()).copy(position = maxPosition)
+        if (idStage == 0L)
+            stage = stage.copy(id = viewModel.nextIdStages())
 
 
         val binding =
@@ -72,8 +77,10 @@ class EditStage : Fragment() {
 
                     val uridb = copyToDb(uri)
                     stage = stage.copy(photo = uridb.toString())
-                    bind(binding)
+                    binding.stageImage.setImageURI(uridb)
                     viewModel.onSetImage(uridb.toString())
+                    binding.stageImage.visibility =
+                        if (stage.photo.isBlank()) View.GONE else View.VISIBLE
                 }
 
             }

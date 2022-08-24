@@ -17,7 +17,8 @@ import ru.netology.nerecipe.databinding.StageBinding
 
 class StageAdapter(
 
-    private val interactionListener: StageInteractionListener
+    private val interactionListener: StageInteractionListener,
+    private val isEdit:Boolean=false
 ) : ListAdapter<Stage, StageAdapter.ViewHolder>(DiffCallback) {
 
     class ViewHolder(private val binding: StageBinding, listener: StageInteractionListener) :
@@ -52,8 +53,7 @@ class StageAdapter(
             val imageUrl =stage.photo
            // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
             photo.setImageURI(Uri.parse(imageUrl))
-
-
+            stageNumber.setText((absoluteAdapterPosition+1).toString())
             dropdownMenu.setOnClickListener { popupMenu.show() }
             photo.visibility = if (stage.photo.isBlank()) View.GONE else View.VISIBLE
 
@@ -66,6 +66,7 @@ class StageAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val inflater = LayoutInflater.from(parent.context)
         val binding = StageBinding.inflate(inflater, parent, false)
+        binding.dropdownMenu.visibility = if (isEdit) View.VISIBLE else View.GONE
         return ViewHolder(binding, interactionListener)
     }
 
@@ -74,8 +75,8 @@ class StageAdapter(
 
     }
 
-    fun getRecipeId(position: Int): Long {
-        return getItem(position).id
+    fun getStagebyPosition(position: Int): Stage {
+        return getItem(position)
     }
 
 
