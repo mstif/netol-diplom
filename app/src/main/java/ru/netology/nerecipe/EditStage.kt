@@ -3,34 +3,20 @@ package ru.netology.nerecipe
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.widget.AppCompatImageView
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
-
 import ru.netology.nerecipe.databinding.FragmentEditStageBinding
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EditStage.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EditStage : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+
     private var idStage: Long = 0L
     private lateinit var stage: Stage
     val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
@@ -39,7 +25,7 @@ class EditStage : Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             idStage = it.getLong(StageFragment.INITIAL_STAGE_KEY)
-            param2 = it.getString(ARG_PARAM2)
+
         }
 
     }
@@ -50,11 +36,16 @@ class EditStage : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         val listStages = viewModel.currentRecipe.value?.stages
-        val maxPosition =
-            if (listStages.isNullOrEmpty()) 0 else listStages.maxOf { it.position } + 1
-        stage = (viewModel.currentStage.value ?: Stage()).copy(position = maxPosition)
-        if (idStage == 0L)
-            stage = stage.copy(id = viewModel.nextIdStages())
+        if (idStage == 0L) {
+            val maxPosition =
+                if (listStages.isNullOrEmpty()) 0 else listStages.maxOf { it.position } + 1
+            stage = (viewModel.currentStage.value ?: Stage()).copy(
+                position = maxPosition,
+                id = viewModel.nextIdStages()
+            )
+        } else {
+            stage = viewModel.currentStage.value ?: Stage()
+        }
 
 
         val binding =
@@ -105,7 +96,11 @@ class EditStage : Fragment() {
             }
             //viewModel.currentStage.value = stage
             val recipe = viewModel.currentRecipe.value
-            val stages = (recipe?.stages ?: listOf()) + stage
+
+
+            val stages = if (idStage == 0L) (recipe?.stages
+                ?: listOf()) + stage
+            else recipe?.stages?.map { if (it.id == idStage) stage else it } ?: listOf()
             viewModel.currentRecipe.value = recipe?.copy(stages = stages)
             viewModel.dataStages.value = stages
             findNavController().popBackStack()
@@ -139,13 +134,6 @@ class EditStage : Fragment() {
         const val RESULT_KEY_PHOTO = "key photo stage"
         const val RESULT_KEY_DESCRIBE = "key text stage"
 
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EditStage().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
+
     }
 }

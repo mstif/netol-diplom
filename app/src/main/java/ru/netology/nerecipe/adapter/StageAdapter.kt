@@ -86,7 +86,7 @@ class StageAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Stage, newItem: Stage): Boolean {
-            return oldItem.content == newItem.content
+            return oldItem == newItem
         }
 
     }

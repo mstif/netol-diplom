@@ -22,12 +22,6 @@ import ru.netology.nerecipe.databinding.FragmentEditRecipeBinding
 import ru.netology.nerecipe.databinding.RecipeBinding
 import java.lang.RuntimeException
 
-
-/**
- * A simple [Fragment] subclass.
- * Use the [EditRecipe.newInstance] factory method to
- * create an instance of this fragment.
- */
 class EditRecipe : Fragment() {
     val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
 
@@ -188,7 +182,7 @@ class EditRecipe : Fragment() {
     }
 
     fun bind(binding: FragmentEditRecipeBinding) = with(binding) {
-        // val post = viewModel.dataViewModel.value?.find { it.id == idPost }
+
 
         recipeDescribe.setText(recipe.describe)
         val positionCategory = resources.getStringArray(R.array.categories).indexOf(recipe.category)
@@ -210,14 +204,7 @@ class EditRecipe : Fragment() {
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment EditRecipe.
-         */
+
         const val INITIAL_RECIPE_KEY = "openEditedRecipe"
         const val RESULT_KEY_DESCRIBE = "result key describe"
         const val RESULT_KEY_CATEGORY = "result key category"
@@ -227,13 +214,6 @@ class EditRecipe : Fragment() {
             putLong(INITIAL_RECIPE_KEY, postId)
         }
 
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            EditRecipe().apply {
-                arguments = Bundle().apply {
 
-                }
-            }
     }
 }

@@ -201,7 +201,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     }
 
     override fun onEditClicked(stage: Stage) {
-        TODO("Not yet implemented")
+        currentStage.value = stage
+        navigateToStageScreenEvent.value = stage
+
     }
 
     override fun onNavigateClicked(stage: Stage) {
