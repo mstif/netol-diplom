@@ -117,8 +117,8 @@ class EditStage : Fragment() {
 
 
     fun bind(binding: FragmentEditStageBinding) = with(binding) {
-        // val post = viewModel.dataViewModel.value?.find { it.id == idPost }
-        stageNumber.text = stage.position.toString()
+        val stagePosition = (viewModel.dataStages.value?.size?:0)+1
+        stageNumber.text = stagePosition.toString()
         textStageEdit.setText(stage.content)
         val imageUrl = stage.photo
         // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"

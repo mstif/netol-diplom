@@ -5,7 +5,7 @@ import ru.netology.nerecipe.Recipe
 import ru.netology.nerecipe.Stage
 
 interface StageInteractionListener {
-    fun onLikeClicked(stage: Stage)
+
     fun onDeleteClicked(stage: Stage)
     fun onEditClicked(stage: Stage)
     fun onNavigateClicked(stage: Stage)

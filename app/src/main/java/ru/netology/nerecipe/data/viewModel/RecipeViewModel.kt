@@ -1,6 +1,8 @@
 package ru.netology.nerecipe.data.viewModel
 
 import android.app.Application
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import ru.netology.nerecipe.FilterFeed
 
@@ -156,7 +158,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long) {
         repository.onMoveItem(to, from, recipeToId, recipeFromId)
-       // println("to="+to+" from="+from + " stageTo="+recipeToId + " stageFrom="+recipeFromId)
+        // println("to="+to+" from="+from + " stageTo="+recipeToId + " stageFrom="+recipeFromId)
     }
 
     fun onMoveItemStage(to: Int, from: Int, stageTo: Stage, stageFrom: Stage) {
@@ -179,7 +181,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         val recipe = currentRecipe.value?.copy(stages = res)
         currentRecipe.value = recipe
 
-        dataStages.value=res
+        dataStages.value = res
+        //onSaveButtonClicked()
 
 
     }
@@ -198,12 +201,15 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         return ""
     }
 
-    override fun onLikeClicked(stage: Stage) {
-        TODO("Not yet implemented")
-    }
 
     override fun onDeleteClicked(stage: Stage) {
-        TODO("Not yet implemented")
+        val stages = currentRecipe.value?.stages?.toMutableList()
+        stages?.removeAll { it.id == stage.id }
+        val recipe = currentRecipe.value?.copy(stages = stages ?: listOf())
+        currentRecipe.value = recipe
+        dataStages.value = stages
+        //onSaveButtonClicked()
+
     }
 
     override fun onEditClicked(stage: Stage) {

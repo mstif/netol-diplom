@@ -17,10 +17,10 @@
         android:text="Recipe editing"
         android:textColor="@color/teal_200"
 
-        android:textStyle="bold"
+        android:textStyle="italic"
 
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_bias="0.95"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -60,7 +60,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="8dp"
         android:text="Recipe stages:"
-        android:textColor="@color/purple_200"
+
         android:textStyle="bold"
 
         app:layout_constraintEnd_toEndOf="parent"

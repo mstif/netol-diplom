@@ -28,7 +28,7 @@ class EditRecipe : Fragment() {
 
     private var idRecipe: Long = 0
     private lateinit var recipe: Recipe
-    private var adapterCurrentList: List<Stage> = listOf()
+   // private var adapterCurrentList: List<Stage> = listOf()
     private val itemTouchHelper by lazy {
         val simpleItemTouchCallback =
             object : ItemTouchHelper.SimpleCallback(
@@ -59,7 +59,7 @@ class EditRecipe : Fragment() {
                     // val list = viewModel.currentRecipe.value?.stages
                     //adapter.submitList(list)
                    // adapter.differ.submitList(list)
-                    adapterCurrentList = adapter.currentList
+                   // adapterCurrentList = adapter.currentList
                     return true
                 }
 
@@ -186,9 +186,9 @@ class EditRecipe : Fragment() {
             adapter.differ.submitList(list)
         }
         viewModel.dataStages.value = recipe.stages
-        val list =  viewModel.currentRecipe.value?.stages?.sortedBy { it.position }
-        adapter.submitList(list)
-        adapter.differ.submitList(list)
+//        val list =  viewModel.currentRecipe.value?.stages?.sortedBy { it.position }
+//        adapter.submitList(list)
+//        adapter.differ.submitList(list)
 
     }.root
 

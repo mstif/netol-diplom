@@ -17,6 +17,7 @@ interface RecipeRepository {
    // val currentSinglePost:MutableLiveData<Post?>
     fun like(id:Long)
     fun delete(id: Long)
+
     fun save(recipe: Recipe)
     fun getRecipeById(id:Long): Recipe?
     fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long)

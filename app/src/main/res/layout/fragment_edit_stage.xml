@@ -1,55 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".StageFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/title_page"
-        app:layout_constraintTop_toTopOf="parent"
-        android:text="Editing stage "
-        android:layout_margin="@dimen/common_spacing"
-        app:layout_constraintStart_toStartOf="parent"
-        android:textStyle="bold"
-        android:textSize="20dp"
-        />
 
     <TextView
+        android:id="@+id/title_page"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/title_number"
-        app:layout_constraintTop_toBottomOf="@id/title_page"
-        android:text="Stage № "
         android:layout_margin="@dimen/common_spacing"
-        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginTop="16dp"
+        android:text="Editing stage "
+        android:textColor="@color/teal_200"
         android:textStyle="italic"
-        />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.951"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
     <TextView
+        android:id="@+id/title_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="@dimen/common_spacing"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+
+        android:text="Stage № "
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/title_page" />
+
+    <TextView
         android:id="@+id/stage_number"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="1"
-        android:layout_marginTop="@dimen/common_spacing"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+
         android:layout_marginLeft="4dp"
+        android:layout_marginTop="@dimen/common_spacing"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/title_number"
-        android:textStyle="italic"
-        />
+        app:layout_constraintTop_toBottomOf="@id/title_page"
+        tools:text="1" />
 
     <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/text_stage_edit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/text_stage_edit"
+        android:layout_margin="@dimen/common_spacing"
         app:layout_constraintTop_toBottomOf="@id/title_number"
         tools:text="Берем и мелко шинкуем три мухомора, тщательно контролируя уровень воды в долине Нила"
-        android:layout_margin="@dimen/common_spacing"
 
         />
+
     <ImageButton
         android:id="@+id/set_image"
         android:layout_width="wrap_content"
@@ -65,24 +72,24 @@
         app:srcCompat="@drawable/ic_baseline_image_24" />
 
     <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/stage_image"
         android:layout_width="@dimen/width_photo_pic"
         android:layout_height="@dimen/height_photo_pic"
-        android:id="@+id/stage_image"
-        app:layout_constraintTop_toBottomOf="@id/set_image"
         android:layout_margin="@dimen/common_spacing"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:src="@mipmap/recipe_book_photo"
+        app:layout_constraintTop_toBottomOf="@id/set_image"
+        tools:contentDescription="TODO"
 
-        tools:contentDescription="TODO" />
+        tools:src="@mipmap/recipe_book_photo" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bottomAppBar"
+        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="bottom"
         app:layout_constraintBottom_toBottomOf="parent"
-        style="@style/Widget.MaterialComponents.BottomAppBar.Colored"
         tools:ignore="BottomAppBar" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
@@ -90,12 +97,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Recipe save"
-        app:srcCompat="@drawable/ic_baseline_check_24"
         app:layout_anchor="@id/bottomAppBar"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        />
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/ic_baseline_check_24" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

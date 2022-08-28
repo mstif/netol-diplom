@@ -15,19 +15,19 @@
         android:text="Stage № "
         android:layout_margin="@dimen/common_spacing"
         app:layout_constraintStart_toStartOf="parent"
-        android:textStyle="italic"
+        android:textStyle="bold"
         />
+
     <TextView
+        android:id="@+id/stage_number"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/stage_number"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="1"
-        android:layout_marginTop="@dimen/common_spacing"
         android:layout_marginLeft="4dp"
+        android:layout_marginTop="@dimen/common_spacing"
+        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/title_number"
-        android:textStyle="italic"
-        />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="10" />
     <ImageButton
         android:id="@+id/dropdown_menu"
         android:layout_width="wrap_content"
