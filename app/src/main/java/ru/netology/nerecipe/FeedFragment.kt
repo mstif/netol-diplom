@@ -36,9 +36,9 @@ class FeedFragment : Fragment() {
                     val adapter = recyclerView.adapter as RecipeAdapter
                     val from = viewHolder.absoluteAdapterPosition
                     val to = target.absoluteAdapterPosition
-                    viewModel.onMoveItem(from,to,adapter.getRecipeId(from),adapter.getRecipeId(to))
-                    adapter.notifyItemMoved(from, to)
 
+                    adapter.notifyItemMoved(from, to)
+                    viewModel.onMoveItem(from,to,adapter.getRecipeId(from),adapter.getRecipeId(to))
                     return true
                 }
 
@@ -85,6 +85,7 @@ class FeedFragment : Fragment() {
             // adapter.submitList(recipes)
             val filteredResult = viewModel.getFilteredResultNew()
             adapter.submitList(filteredResult)
+            adapter.differ.submitList(filteredResult)
         }
 
 

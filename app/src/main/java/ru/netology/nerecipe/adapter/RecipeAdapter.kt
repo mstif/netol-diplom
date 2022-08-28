@@ -5,11 +5,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nerecipe.R
 import ru.netology.nerecipe.Recipe
+import ru.netology.nerecipe.Stage
 import ru.netology.nerecipe.databinding.RecipeBinding
 
 
@@ -17,7 +19,7 @@ class RecipeAdapter(
 
     private val interactionListener: RecipeInteractionListener
 ) : ListAdapter<Recipe, RecipeAdapter.ViewHolder>(DiffCallback) {
-
+    val differ: AsyncListDiffer<Recipe> = AsyncListDiffer(this, DiffCallback)
     class ViewHolder(private val binding: RecipeBinding, listener: RecipeInteractionListener) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var recipe: Recipe
@@ -96,7 +98,10 @@ class RecipeAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-            return oldItem == newItem
+            return (oldItem.describe == newItem.describe &&
+                    oldItem.stages == oldItem.stages &&
+                    oldItem.category == oldItem.category &&
+                    oldItem.favorites == oldItem.favorites)
         }
 
     }

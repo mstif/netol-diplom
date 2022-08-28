@@ -13,7 +13,7 @@ interface RecipeDao {
     fun getAll(): LiveData<List<RecipeEntity>>
 
     @Query("SELECT * FROM recipes WHERE id=:id")
-    fun getRecipeById(id: Long): RecipeEntity
+    fun getRecipeById(id: Long): RecipeEntity?
 
 
     @Insert

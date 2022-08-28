@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +19,10 @@ import ru.netology.nerecipe.databinding.StageBinding
 class StageAdapter(
 
     private val interactionListener: StageInteractionListener,
-    private val isEdit:Boolean=false
-) : ListAdapter<Stage, StageAdapter.ViewHolder>(DiffCallback) {
+    private val isEdit:Boolean=false,
 
+) : ListAdapter<Stage, StageAdapter.ViewHolder>(DiffCallback) {
+    val differ: AsyncListDiffer<Stage> = AsyncListDiffer(this, DiffCallback)
     class ViewHolder(private val binding: StageBinding, listener: StageInteractionListener) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var stage: Stage
@@ -71,8 +73,8 @@ class StageAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.bind(getItem(position))
-
+        val stage = currentList[position]
+        holder.bind(stage)
     }
 
     fun getStagebyPosition(position: Int): Stage {
@@ -86,7 +88,7 @@ class StageAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Stage, newItem: Stage): Boolean {
-            return oldItem == newItem
+            return oldItem.content == newItem.content
         }
 
     }

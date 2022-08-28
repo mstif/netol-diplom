@@ -102,6 +102,7 @@ class EditStage : Fragment() {
                 ?: listOf()) + stage
             else recipe?.stages?.map { if (it.id == idStage) stage else it } ?: listOf()
             viewModel.currentRecipe.value = recipe?.copy(stages = stages)
+
             viewModel.dataStages.value = stages
             findNavController().popBackStack()
 

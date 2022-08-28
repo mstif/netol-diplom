@@ -56,8 +56,8 @@ class SqLiteRepository(private val dao: RecipeDao) : RecipeRepository {
     //    currentPost.value = data.value?.find { it.id == id }
     // }
 
-    override fun getRecipeById(id: Long): Recipe {
-        val p = dao.getRecipeById(id).toModel()
+    override fun getRecipeById(id: Long): Recipe? {
+        val p = dao.getRecipeById(id)?.toModel()
         return p
     }
 

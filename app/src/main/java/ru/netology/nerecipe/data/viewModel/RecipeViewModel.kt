@@ -28,7 +28,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         ).recipeDao
     )
     val dataViewModel by repository::data
-    val sharePostContentModel by repository::sharePostContent
     val navigateToRecipeScreenEvent = SingleLiveEvent<Recipe?>()
     val navigateToRecipeSingle = SingleLiveEvent<Recipe>()
     val filter = SingleLiveEvent<FilterFeed>()
@@ -36,7 +35,6 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     val dataStages by repository::stages
 
-    //val dataStages = repository.stages
     val navigateToStageScreenEvent = SingleLiveEvent<Stage?>()
     val currentRecipe by repository::currentRecipe
     val currentStage by repository::currentStage
@@ -45,8 +43,9 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     override fun onDeleteClicked(recipe: Recipe) = repository.delete(recipe.id)
     override fun onEditClicked(recipe: Recipe) {
-        currentRecipe.value = recipe
-        navigateToRecipeScreenEvent.value = recipe
+        val recipeEdit = getRecipeById(recipe.id)
+        currentRecipe.value = recipeEdit
+        navigateToRecipeScreenEvent.value = recipeEdit
 
 
     }
@@ -75,6 +74,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
                 )
         currentRecipe.value = editedRecipe
         repository.save(editedRecipe)
+
 
     }
 
@@ -148,33 +148,39 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         currentStage.value = currentStage.value?.copy(photo = uri)
     }
 
-    fun nextIdStages():Long {
-       return repository.nextIdStages()
+    fun nextIdStages(): Long {
+        return repository.nextIdStages()
 
     }
 
 
     fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long) {
         repository.onMoveItem(to, from, recipeToId, recipeFromId)
+       // println("to="+to+" from="+from + " stageTo="+recipeToId + " stageFrom="+recipeFromId)
     }
 
-    fun onMoveItemStage(to: Int, from: Int, recipeToId: Long, recipeFromId: Long) {
-        val list = dataStages.value?.toMutableList()
+    fun onMoveItemStage(to: Int, from: Int, stageTo: Stage, stageFrom: Stage) {
+        // val list = dataStages.value
+        val list = currentRecipe.value?.stages
         if (list == null) return
-        val fromLocation = list[from].copy(position = to)
-        val toLocation = list[to].copy(position = from)
+        val fromStage = list.find { it.id == stageFrom.id }
+        val toStage = list.find { it.id == stageTo.id }
+
+        val fromLocation = fromStage?.copy(position = fromStage.position + if (to < from) -1 else 1)
+        val toLocation = toStage?.copy(position = toStage.position + if (to < from) 1 else -1)
+
         //list.removeAt(from)
-        list[from] = fromLocation
-        list[to] = toLocation
-        dataStages.value = list
-//        if (to < from) {
-//            //+1 because it start from 0 on the upside. otherwise it will not change the locations accordingly
-//            list.add(to + 1 , fromLocation)
-//        } else {
-//            //-1 because it start from length + 1 on the down side. otherwise it will not change the locations accordingly
-//            list.add(to - 1, fromLocation)
-//        }
-//        differ.submitList(list)
+        val res = list.map {
+            if (it.id == fromLocation?.id) fromLocation
+            else
+                if (it.id == toLocation?.id) toLocation
+                else it
+        }
+        val recipe = currentRecipe.value?.copy(stages = res)
+        currentRecipe.value = recipe
+
+        dataStages.value=res
+
 
     }
 
