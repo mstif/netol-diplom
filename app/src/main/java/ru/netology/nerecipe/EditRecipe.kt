@@ -120,7 +120,8 @@ class EditRecipe : Fragment() {
 
 
 
-        val rec= viewModel.getRecipeById(idRecipe)
+         //viewModel.currentRecipe.value= viewModel.getRecipeById(idRecipe)
+       // viewModel.currentRecipe.value = viewModel.getRecipeByIdFromLiveData(idRecipe)
         recipe = viewModel.currentRecipe.value ?: Recipe()
 
 
@@ -184,11 +185,11 @@ class EditRecipe : Fragment() {
             val list = stages.sortedBy { it.position }
             adapter.submitList(list)
             adapter.differ.submitList(list)
+            binding.emptyPovar.visibility = if (list.isEmpty())   View.VISIBLE else View.GONE
         }
         viewModel.dataStages.value = recipe.stages
-//        val list =  viewModel.currentRecipe.value?.stages?.sortedBy { it.position }
-//        adapter.submitList(list)
-//        adapter.differ.submitList(list)
+
+
 
     }.root
 
@@ -212,6 +213,7 @@ class EditRecipe : Fragment() {
 
 
         spinner.setSelection(positionCategory)
+        binding.root.bringToFront()
     }
 
     companion object {

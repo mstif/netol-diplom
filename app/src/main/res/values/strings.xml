@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Recipe book</string>
+    <string name="app_name">Recipes</string>
     <string name="descr_avatar">avatar</string>
     <string name="descr_menu">Menu</string>
     <string name="favorit_button">To favorites</string>

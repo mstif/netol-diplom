@@ -66,7 +66,8 @@ class RecipeAdapter(
            // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
             photo.setImageURI(Uri.parse(imageUrl))
             toggleButtonFavorit.isChecked = recipe.favorites
-            recipe.category.also { category.text = it }
+            category.text = recipe.category
+           // recipe.category.also { category.text = it }
             dropdownMenu.setOnClickListener { popupMenu.show() }
             videoGroup.visibility = if (recipe.photoRecipe.isBlank()) View.GONE else View.VISIBLE
 
@@ -98,10 +99,12 @@ class RecipeAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-            return (oldItem.describe == newItem.describe &&
-                    oldItem.stages == oldItem.stages &&
-                    oldItem.category == oldItem.category &&
-                    oldItem.favorites == oldItem.favorites)
+            return  (oldItem.describe == newItem.describe &&
+                    oldItem.stages == newItem.stages &&
+                    oldItem.category == newItem.category &&
+                    oldItem.favorites == newItem.favorites
+
+                    )
         }
 
     }

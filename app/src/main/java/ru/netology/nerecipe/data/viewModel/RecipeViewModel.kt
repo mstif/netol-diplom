@@ -45,9 +45,10 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     override fun onDeleteClicked(recipe: Recipe) = repository.delete(recipe.id)
     override fun onEditClicked(recipe: Recipe) {
-        val recipeEdit = getRecipeById(recipe.id)
-        currentRecipe.value = recipeEdit
-        navigateToRecipeScreenEvent.value = recipeEdit
+        //val recipeEdit = getRecipeByIdFromLiveData(recipe.id)
+
+        currentRecipe.value = recipe
+        navigateToRecipeScreenEvent.value = recipe
 
 
     }
@@ -62,6 +63,8 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     }
 
     fun getRecipeById(id: Long): Recipe? = repository.getRecipeById(id)
+
+    fun getRecipeByIdFromLiveData(id: Long?): Recipe? = dataViewModel.value?.find { it.id == id }
 
     fun onSaveButtonClicked() {
 

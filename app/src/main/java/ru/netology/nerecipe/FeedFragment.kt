@@ -38,7 +38,12 @@ class FeedFragment : Fragment() {
                     val to = target.absoluteAdapterPosition
 
                     adapter.notifyItemMoved(from, to)
-                    viewModel.onMoveItem(from,to,adapter.getRecipeId(from),adapter.getRecipeId(to))
+                    viewModel.onMoveItem(
+                        from,
+                        to,
+                        adapter.getRecipeId(from),
+                        adapter.getRecipeId(to)
+                    )
                     return true
                 }
 
@@ -86,6 +91,7 @@ class FeedFragment : Fragment() {
             val filteredResult = viewModel.getFilteredResultNew()
             adapter.submitList(filteredResult)
             adapter.differ.submitList(filteredResult)
+            binding.emptyPic.visibility = if (filteredResult.isEmpty())   View.VISIBLE else View.GONE
         }
 
 
@@ -208,6 +214,7 @@ class FeedFragment : Fragment() {
 
         viewModel.navigateToRecipeSingle.observe(this) { recipeToSingle ->
             viewModel.currentRecipe.value = recipeToSingle
+            viewModel.dataStages.value=recipeToSingle.stages
             findNavController().navigate(
                 R.id.singleRecipe,
                 SingleRecipeFragment.createBundle(recipeToSingle.id)

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Книга рецептов</string>
+    <string name="app_name">Рецепты</string>
     <string name="descr_avatar">Аватар</string>
     <string name="descr_menu">Меню</string>
     <string name="favorit_button">В избранное</string>
