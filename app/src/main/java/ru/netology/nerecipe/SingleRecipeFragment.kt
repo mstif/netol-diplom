@@ -32,30 +32,17 @@ class SingleRecipeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val recipe = viewModel.getRecipeByIdFromLiveData(idRecipe)
-
-
-       //val recipe = viewModel.currentRecipe.value
-        if (recipe == null)
-            throw RuntimeException("Error receive recipe parameter")
-
 
         val binding =
             FragmentSingleRecipeBinding.inflate(layoutInflater, container, false).also { binding ->
-                with(binding) {
-
-                    bind(binding)
-
-
-                }
+                bind(binding)
             }
+
         val adapter = StageAdapter(viewModel, false)
 
-        val linearLayoutManager = LinearLayoutManager(context)
-        linearLayoutManager.orientation = LinearLayoutManager.VERTICAL
-        binding.container.layoutManager = linearLayoutManager
-
         binding.container.adapter = adapter
+
+        //observe
 
         viewModel.dataStages.observe(viewLifecycleOwner) { stages ->
             adapter.submitList(stages)
@@ -64,10 +51,10 @@ class SingleRecipeFragment : Fragment() {
 
         }
 
-        viewModel.dataViewModel.observe(viewLifecycleOwner){ recipes->
+        viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
             bind(binding)
-
         }
+
         viewModel.navigateToRecipeScreenEvent.observe(viewLifecycleOwner) { recipeToEdit ->
             findNavController().navigate(
                 R.id.action_singleRecipe_to_editRecipe,
@@ -75,13 +62,33 @@ class SingleRecipeFragment : Fragment() {
             )
         }
 
+        setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, bundle ->
+            if (requestKey != EditRecipe.REQUEST_KEY_CHAHGE) return@setFragmentResultListener
+            viewModel.onSaveButtonClicked()
+        }
+
+        return binding.root
+    }
+
+    fun bind(binding: FragmentSingleRecipeBinding) = with(binding) {
+
+        val recipe = viewModel.getRecipeByIdFromLiveData(idRecipe)
+
+        if (recipe == null) return@with
+
+        toggleButtonFavorit.isChecked = recipe.favorites
+        describe.text = recipe.describe
+        author.text = recipe.author
+        category.text = recipe.category
+        viewModel.dataStages.value = recipe.stages
+
         val popupMenu by lazy {
-            PopupMenu(this.context, binding.dropdownMenu).apply {
+            PopupMenu(requireContext(), binding.dropdownMenu).apply {
                 inflate(R.menu.option_recipe)
                 this.setOnMenuItemClickListener { menuItems ->
                     when (menuItems.itemId) {
                         R.id.remove -> {
-                            viewModel.onDeleteClicked(recipe = recipe )
+                            viewModel.onDeleteClicked(recipe = recipe)
                             findNavController().popBackStack()
                             true
                         }
@@ -95,49 +102,21 @@ class SingleRecipeFragment : Fragment() {
                 }
             }
         }
+
         binding.dropdownMenu.setOnClickListener { popupMenu.show() }
+
         binding.toggleButtonFavorit.setOnClickListener {
             viewModel.onLikeClicked(recipe)
 
         }
-
-
-
-        setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, bundle ->
-            if (requestKey != EditRecipe.REQUEST_KEY_CHAHGE) return@setFragmentResultListener
-
-            viewModel.onSaveButtonClicked()
-
-        }
-
-        return binding.root
-    }
-
-    fun bind(binding: FragmentSingleRecipeBinding) = with(binding) {
-
-
-        val recipe = viewModel.getRecipeByIdFromLiveData(idRecipe)
-        //val rec1 = viewModel.getRecipeById(idRecipe?:0)
-        //val recipe = viewModel.currentRecipe.value
-        if (recipe == null) return@with
-
-        toggleButtonFavorit.isChecked = recipe.favorites
-
-        describe.text = recipe.describe
-        author.text = recipe.author
-        category.text = recipe.category
-        viewModel.dataStages.value=recipe.stages
-
     }
 
     companion object {
 
         const val INITIAL_RECIPE_KEY = "openSingleRecipe"
 
-
         fun createBundle(idRecipe: Long?) =
             Bundle(2).apply {
-
                 putLong(INITIAL_RECIPE_KEY, idRecipe ?: 0)
             }
     }

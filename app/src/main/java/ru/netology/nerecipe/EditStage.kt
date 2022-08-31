@@ -50,12 +50,7 @@ class EditStage : Fragment() {
 
         val binding =
             FragmentEditStageBinding.inflate(layoutInflater, container, false).also { binding ->
-                with(binding) {
-
-                    bind(binding)
-
-
-                }
+                bind(binding)
             }
 
         val selectImageFromGalleryResult =
@@ -86,17 +81,10 @@ class EditStage : Fragment() {
             val text = binding.textStageEdit.text
 
             if (!text.isNullOrBlank()) {
-                val resultBundle = Bundle(2)
-                resultBundle.putString(RESULT_KEY_DESCRIBE, text.toString())
-                resultBundle.putString(RESULT_KEY_PHOTO, stage.photo)
-                setFragmentResult(requestKey = STAGE_KEY_REQUEST, resultBundle)
                 stage = stage.copy(content = text.toString())
-
-
             }
-            //viewModel.currentStage.value = stage
-            val recipe = viewModel.currentRecipe.value
 
+            val recipe = viewModel.currentRecipe.value
 
             val stages = if (idStage == 0L) (recipe?.stages
                 ?: listOf()) + stage
@@ -115,26 +103,21 @@ class EditStage : Fragment() {
         return uri
     }
 
+    fun getCurrentPosition(): Int {
+        val stages = viewModel.dataStages.value?.sortedBy { it.position }
+        if (idStage == 0L) return (stages?.size ?: 0) + 1
+        return (stages?.indexOfFirst { it.id == idStage } ?: 0) + 1
+    }
 
     fun bind(binding: FragmentEditStageBinding) = with(binding) {
-        val stagePosition = (viewModel.dataStages.value?.size?:0)+1
+        val stagePosition = getCurrentPosition()
         stageNumber.text = stagePosition.toString()
         textStageEdit.setText(stage.content)
         val imageUrl = stage.photo
-        // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
         stageImage.setImageURI(Uri.parse(imageUrl))
-
-
         stageImage.visibility = if (stage.photo.isBlank()) View.GONE else View.VISIBLE
 
     }
 
-    companion object {
 
-        const val STAGE_KEY_REQUEST = "stage change"
-        const val RESULT_KEY_PHOTO = "key photo stage"
-        const val RESULT_KEY_DESCRIBE = "key text stage"
-
-
-    }
 }

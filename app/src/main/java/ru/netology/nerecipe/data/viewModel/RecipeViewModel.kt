@@ -104,10 +104,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         return filtered
     }
 
-    fun getFilteredResultNew(
-        // recipes: List<Recipe>?
-
-    ): List<Recipe> {
+    fun getFilteredResultNew(): List<Recipe> {
         val filtered: MutableList<Recipe> = mutableListOf()
         val recipes = dataViewModel.value
         if (recipes == null) return filtered

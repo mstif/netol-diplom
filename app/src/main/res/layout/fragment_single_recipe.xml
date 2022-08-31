@@ -135,6 +135,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/common_spacing"
         android:background="@color/peach"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toggleButtonFavorit"
         tools:listitem="@layout/stage"

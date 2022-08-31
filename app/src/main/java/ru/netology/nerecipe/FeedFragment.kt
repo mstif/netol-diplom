@@ -84,17 +84,13 @@ class FeedFragment : Fragment() {
         itemTouchHelper.attachToRecyclerView(binding.container)
         binding.container.adapter = adapter
 
-
-
         viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
             // adapter.submitList(recipes)
             val filteredResult = viewModel.getFilteredResultNew()
             adapter.submitList(filteredResult)
             adapter.differ.submitList(filteredResult)
-            binding.emptyPic.visibility = if (filteredResult.isEmpty())   View.VISIBLE else View.GONE
+            binding.emptyPic.visibility = if (filteredResult.isEmpty()) View.VISIBLE else View.GONE
         }
-
-
 
         binding.fab.setOnClickListener {
             viewModel.currentRecipe.value = Recipe()
@@ -105,17 +101,13 @@ class FeedFragment : Fragment() {
             if (requestKey != REQUEST_CATEGORY_KEY) return@setFragmentResultListener
             val categories =
                 bundle.getIntegerArrayList(RESULT_CATEGORY_KEY) ?: return@setFragmentResultListener
-            // val listCategories = categories.split(";")
+
             val filterFeed =
                 viewModel.filter.value?.copy(categories = categories) ?: FilterFeed("", categories)
-
             viewModel.onChangeFilters(filterFeed)
-            //viewModel.currentPost.value = null
         }
 
-
     }.root
-
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // The usage of an interface lets you inject your own implementation
@@ -139,14 +131,6 @@ class FeedFragment : Fragment() {
                     override fun onQueryTextSubmit(searchText: String?): Boolean {
                         searchView.clearFocus()
 
-//                        val filteredResult = viewModel.getFilteredResult(
-//                            viewModel.dataViewModel.value,
-//                            searchText,
-//                            null
-//                        )
-
-                        //adapter.submitList(filteredResult)
-
                         val filterFeed = viewModel.filter.value?.copy(searchText = searchText ?: "")
                             ?: FilterFeed(
                                 searchText ?: "",
@@ -157,12 +141,7 @@ class FeedFragment : Fragment() {
                     }
 
                     override fun onQueryTextChange(searchText: String?): Boolean {
-                        //val filteredResult = viewModel.getFilteredResult(
-//                            viewModel.dataViewModel.value,
-//                            searchText,
-//                            null
-//                        )
-                        // adapter.submitList(filteredResult)
+
                         val filterFeed = viewModel.filter.value?.copy(searchText = searchText ?: "")
                             ?: FilterFeed(
                                 searchText ?: "",
@@ -205,16 +184,13 @@ class FeedFragment : Fragment() {
         viewModel.filter.value = FilterFeed("", List<Int>(categoriesList.size) { index -> index })
 
         viewModel.filter.observe(this) {
-            val filteredResult = viewModel.getFilteredResultNew(
-                // viewModel.dataViewModel.value
-
-            )
+            val filteredResult = viewModel.getFilteredResultNew()
             adapter.submitList(filteredResult)
         }
 
         viewModel.navigateToRecipeSingle.observe(this) { recipeToSingle ->
             viewModel.currentRecipe.value = recipeToSingle
-            viewModel.dataStages.value=recipeToSingle.stages
+            viewModel.dataStages.value = recipeToSingle.stages
             findNavController().navigate(
                 R.id.singleRecipe,
                 SingleRecipeFragment.createBundle(recipeToSingle.id)
@@ -227,27 +203,16 @@ class FeedFragment : Fragment() {
             )
         }
 
-        setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, bundle ->
-            if (requestKey != EditRecipe.REQUEST_KEY_CHAHGE) return@setFragmentResultListener
-
-            viewModel.onSaveButtonClicked()
-            viewModel.currentRecipe.value = null
-        }
-
     }
 
     companion object {
         const val RESULT_CATEGORY_KEY = "resultCategoryKey"
         const val REQUEST_CATEGORY_KEY = "requestCategoryKey"
         const val REQUEST_KEY_SINGLE = "singlePost"
-        const val INITIAL_CONTENT_KEY = "initialContent"
         const val INITIAL_FRAGMENT_KEY = "initialFragmentKey"
 
-        // fun create(initialContentPost:String?)= PostContentFragment().apply {
-        //    this.arguments=createBundle(initialContentPost) }
         fun createBundle(initialContentPost: String?, initialFragmentKey: String) =
-            Bundle(2).apply {
-                putString(INITIAL_CONTENT_KEY, initialContentPost)
+            Bundle(1).apply {
                 putString(INITIAL_FRAGMENT_KEY, initialFragmentKey)
             }
 
