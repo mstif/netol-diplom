@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
@@ -114,13 +115,16 @@ class EditRecipe : Fragment() {
         binding.ok.setOnClickListener {
             val text = binding.recipeDescribe.text
             val category = binding.spinner.selectedItem.toString()
+            val stages = viewModel.currentRecipe.value?.stages ?: listOf()
 
-            if (!text.isNullOrBlank()) {
-                recipe = recipe.copy(describe = text.toString())
+            if (!text.isNullOrBlank() && stages.isNotEmpty()) {
+                recipe =
+                    recipe.copy(category = category, stages = stages, describe = text.toString())
+            } else {
+                Toast.makeText(context, getString(R.string.emtyDescribe), Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
             }
 
-            val stages = viewModel.currentRecipe.value?.stages ?: listOf()
-            recipe = recipe.copy(category = category, stages = stages)
             viewModel.currentRecipe.value = recipe
             viewModel.onSaveButtonClicked()
             viewModel.currentRecipe.value = null

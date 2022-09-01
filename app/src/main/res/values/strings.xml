@@ -22,6 +22,8 @@
     <string name="editing_stage">Editing stage</string>
     <string name="stage_num_title">Stage №</string>
     <string name="set_picture">Set picture</string>
+    <string name="emtyDescribe">Recipe description and stages cannot be empty!</string>
+    <string name="stage_empty">Stage description can not be empty</string>
     <string-array name="categories">
         <item>European</item>
         <item>Asian</item>

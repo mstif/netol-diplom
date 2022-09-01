@@ -31,4 +31,6 @@
     <string name="editing_stage">Редактирование шага</string>
     <string name="stage_num_title">Шаг №</string>
     <string name="set_picture">Установить изображение</string>
+    <string name="emtyDescribe">Описание и шаги рецепта должны быть заполнены</string>
+    <string name="stage_empty">Описание шага не должно быть пустым</string>
 </resources>
