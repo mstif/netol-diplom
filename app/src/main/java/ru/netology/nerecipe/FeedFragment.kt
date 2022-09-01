@@ -13,15 +13,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
-import ru.netology.nerecipe.databinding.FragmentFeedBinding
 import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.data.RecipeRepository
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
+import ru.netology.nerecipe.databinding.FragmentFeedBinding
 
 
 class FeedFragment : Fragment() {
 
-    val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
+    val viewModel: RecipeViewModel by viewModels(ownerProducer = ::requireParentFragment)
     private lateinit var adapter: RecipeAdapter
 
     private val itemTouchHelper by lazy {
@@ -79,13 +79,11 @@ class FeedFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View = FragmentFeedBinding.inflate(layoutInflater, container, false).also { binding ->
-
         adapter = RecipeAdapter(viewModel)
         itemTouchHelper.attachToRecyclerView(binding.container)
         binding.container.adapter = adapter
 
-        viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
-            // adapter.submitList(recipes)
+        viewModel.dataViewModel.observe(viewLifecycleOwner) {
             val filteredResult = viewModel.getFilteredResult()
             adapter.submitList(filteredResult)
             adapter.differ.submitList(filteredResult)
@@ -181,7 +179,7 @@ class FeedFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val categoriesList = resources.getStringArray(R.array.categories).toList()
         viewModel.listAllCategories = categoriesList
-        viewModel.filter.value = FilterFeed("", List<Int>(categoriesList.size) { index -> index })
+        viewModel.filter.value = FilterFeed("", List(categoriesList.size) { index -> index })
 
         viewModel.filter.observe(this) {
             val filteredResult = viewModel.getFilteredResult()
@@ -208,13 +206,8 @@ class FeedFragment : Fragment() {
     companion object {
         const val RESULT_CATEGORY_KEY = "resultCategoryKey"
         const val REQUEST_CATEGORY_KEY = "requestCategoryKey"
-        const val REQUEST_KEY_SINGLE = "singlePost"
-        const val INITIAL_FRAGMENT_KEY = "initialFragmentKey"
 
-        fun createBundle(initialContentPost: String?, initialFragmentKey: String) =
-            Bundle(1).apply {
-                putString(INITIAL_FRAGMENT_KEY, initialFragmentKey)
-            }
+
 
     }
 }

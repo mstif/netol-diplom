@@ -1,25 +1,17 @@
 package ru.netology.nerecipe.data.viewModel
 
+
 import android.app.Application
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.AndroidViewModel
 import ru.netology.nerecipe.FilterFeed
-
 import ru.netology.nerecipe.Recipe
 import ru.netology.nerecipe.Stage
-
 import ru.netology.nerecipe.adapter.RecipeInteractionListener
 import ru.netology.nerecipe.adapter.StageInteractionListener
-
-
+import ru.netology.nerecipe.data.RecipeRepository
 import ru.netology.nerecipe.data.impl.SqLiteRepository
 import ru.netology.nerecipe.db.AppDb
-import ru.netology.nerecipe.data.RecipeRepository
-
 import x.y.z.SingleLiveEvent
-import java.text.SimpleDateFormat
-import java.util.*
 
 class RecipeViewModel(application: Application) : AndroidViewModel(application),
     RecipeInteractionListener, StageInteractionListener {
@@ -63,7 +55,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
     fun onSaveButtonClicked() {
 
-        val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.getDefault())
+        //val sdf = SimpleDateFormat("dd.MM.yyyy hh:mm", Locale.getDefault())
 
         val editedRecipe =
             currentRecipe.value?.copy(author = getUserName()) ?: Recipe(
@@ -92,7 +84,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
                         && searchCategory?.contains(listAllCategories.indexOf(it.category)) ?: true
             })
         } else {
-            if (searchCategory != null && !searchCategory.isEmpty())
+            if (searchCategory != null && searchCategory.isNotEmpty())
                 filtered.addAll(recipes.filter {
                     searchCategory.contains(
                         listAllCategories.indexOf(

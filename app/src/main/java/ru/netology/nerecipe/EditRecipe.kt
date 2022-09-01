@@ -1,30 +1,22 @@
 package ru.netology.nerecipe
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import androidx.core.widget.addTextChangedListener
-import androidx.fragment.app.setFragmentResult
-import androidx.fragment.app.setFragmentResultListener
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.adapter.StageAdapter
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
 import ru.netology.nerecipe.databinding.FragmentEditRecipeBinding
-import ru.netology.nerecipe.databinding.RecipeBinding
-import java.lang.RuntimeException
 
 class EditRecipe : Fragment() {
-    val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
+    val viewModel: RecipeViewModel by viewModels(ownerProducer = ::requireParentFragment)
 
     private var idRecipe: Long = 0
     private lateinit var recipe: Recipe
@@ -49,7 +41,6 @@ class EditRecipe : Fragment() {
                     target.itemView.findViewById<TextView>(R.id.stage_number).text =
                         (from + 1).toString()
 
-
                     adapter.notifyItemMoved(from, to)
                     viewModel.onMoveItemStage(
                         from,
@@ -57,10 +48,6 @@ class EditRecipe : Fragment() {
                         adapter.getStagebyPosition(from),
                         adapter.getStagebyPosition(to)
                     )
-                    // val list = viewModel.currentRecipe.value?.stages
-                    //adapter.submitList(list)
-                    // adapter.differ.submitList(list)
-                    // adapterCurrentList = adapter.currentList
                     return true
                 }
 
@@ -155,7 +142,7 @@ class EditRecipe : Fragment() {
 
     }.root
 
-    fun bind(binding: FragmentEditRecipeBinding) = with(binding) {
+    private fun bind(binding: FragmentEditRecipeBinding) = with(binding) {
 
 
         recipeDescribe.setText(recipe.describe)

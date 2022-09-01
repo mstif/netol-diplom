@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.*
 import androidx.recyclerview.widget.RecyclerView
-import ru.netology.nerecipe.databinding.FragmentFeedBinding
 import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.data.RecipeRepository
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
@@ -22,7 +21,7 @@ import ru.netology.nerecipe.databinding.FragmentFavoritesFeedBinding
 
 class FeedFavoritesFragment : Fragment() {
 
-    val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
+    val viewModel: RecipeViewModel by viewModels(ownerProducer = ::requireParentFragment)
     private lateinit var adapter: RecipeAdapter
 
     private val itemTouchHelper by lazy {
@@ -79,38 +78,42 @@ class FeedFavoritesFragment : Fragment() {
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View = FragmentFavoritesFeedBinding.inflate(layoutInflater, container, false).also { binding ->
+    ): View =
+        FragmentFavoritesFeedBinding.inflate(layoutInflater, container, false).also { binding ->
+
+            adapter = RecipeAdapter(viewModel)
+            itemTouchHelper.attachToRecyclerView(binding.container)
+            binding.container.adapter = adapter
+
+            viewModel.dataViewModel.observe(viewLifecycleOwner) {
+                val filteredResult = viewModel.getFilteredResult().filter { it.favorites }
+                adapter.submitList(filteredResult)
+                adapter.differ.submitList(filteredResult)
+                binding.emptyPic.visibility =
+                    if (filteredResult.isEmpty()) View.VISIBLE else View.GONE
+            }
 
 
-        adapter = RecipeAdapter(viewModel)
-        itemTouchHelper.attachToRecyclerView(binding.container)
-        binding.container.adapter = adapter
+            setFragmentResultListener(requestKey = FeedFragment.REQUEST_CATEGORY_KEY) { requestKey, bundle ->
+                if (requestKey != FeedFragment.REQUEST_CATEGORY_KEY) return@setFragmentResultListener
+                val categories =
+                    bundle.getIntegerArrayList(FeedFragment.RESULT_CATEGORY_KEY)
+                        ?: return@setFragmentResultListener
 
-        viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
-            // adapter.submitList(recipes)
-            val filteredResult = viewModel.getFilteredResult().filter { it.favorites }
-            adapter.submitList(filteredResult)
-            adapter.differ.submitList(filteredResult)
-            binding.emptyPic.visibility = if (filteredResult.isEmpty()) View.VISIBLE else View.GONE
-        }
+                val filterFeed =
+                    viewModel.filter.value?.copy(categories = categories) ?: FilterFeed(
+                        "",
+                        categories
+                    )
+                viewModel.onChangeFilters(filterFeed)
+            }
 
-
-        setFragmentResultListener(requestKey = REQUEST_CATEGORY_KEY) { requestKey, bundle ->
-            if (requestKey != REQUEST_CATEGORY_KEY) return@setFragmentResultListener
-            val categories =
-                bundle.getIntegerArrayList(RESULT_CATEGORY_KEY) ?: return@setFragmentResultListener
-
-            val filterFeed =
-                viewModel.filter.value?.copy(categories = categories) ?: FilterFeed("", categories)
-            viewModel.onChangeFilters(filterFeed)
-        }
-
-    }.root
+        }.root
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         // The usage of an interface lets you inject your own implementation
         val menuHost: MenuHost = requireActivity()
-        view.getBackground().setAlpha(50)
+        view.background.alpha = 50
         // Add menu items without using the Fragment Menu APIs
         // Note how we can tie the MenuProvider to the viewLifecycleOwner
         // and an optional Lifecycle.State (here, RESUMED) to indicate when
@@ -179,7 +182,7 @@ class FeedFavoritesFragment : Fragment() {
         super.onCreate(savedInstanceState)
         val categoriesList = resources.getStringArray(R.array.categories).toList()
         viewModel.listAllCategories = categoriesList
-        viewModel.filter.value = FilterFeed("", List<Int>(categoriesList.size) { index -> index })
+        viewModel.filter.value = FilterFeed("", List(categoriesList.size) { index -> index })
 
         viewModel.filter.observe(this) {
             val filteredResult = viewModel.getFilteredResult()
@@ -203,16 +206,5 @@ class FeedFavoritesFragment : Fragment() {
 
     }
 
-    companion object {
-        const val RESULT_CATEGORY_KEY = "resultCategoryKey"
-        const val REQUEST_CATEGORY_KEY = "requestCategoryKey"
-        const val REQUEST_KEY_SINGLE = "singlePost"
-        const val INITIAL_FRAGMENT_KEY = "initialFragmentKey"
 
-        fun createBundle(initialContentPost: String?, initialFragmentKey: String) =
-            Bundle(1).apply {
-                putString(INITIAL_FRAGMENT_KEY, initialFragmentKey)
-            }
-
-    }
 }

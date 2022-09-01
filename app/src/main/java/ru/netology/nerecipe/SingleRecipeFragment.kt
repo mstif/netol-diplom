@@ -9,7 +9,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.setFragmentResultListener
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.LinearLayoutManager
 import ru.netology.nerecipe.adapter.StageAdapter
 import ru.netology.nerecipe.data.RecipeRepository
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
@@ -17,9 +16,8 @@ import ru.netology.nerecipe.databinding.FragmentSingleRecipeBinding
 
 class SingleRecipeFragment : Fragment() {
 
-
     private var idRecipe: Long? = null
-    val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
+    private val viewModel: RecipeViewModel by viewModels(ownerProducer = ::requireParentFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +45,11 @@ class SingleRecipeFragment : Fragment() {
         viewModel.dataStages.observe(viewLifecycleOwner) { stages ->
             adapter.submitList(stages)
             binding.emptyPovar.visibility =
-                if (stages?.isEmpty() ?: true) View.VISIBLE else View.GONE
+                if (stages?.isEmpty() != false) View.VISIBLE else View.GONE
 
         }
 
-        viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
+        viewModel.dataViewModel.observe(viewLifecycleOwner) {
             bind(binding)
         }
 
@@ -62,19 +60,17 @@ class SingleRecipeFragment : Fragment() {
             )
         }
 
-        setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, bundle ->
+        setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, _ ->
             if (requestKey != EditRecipe.REQUEST_KEY_CHAHGE) return@setFragmentResultListener
-           // viewModel.onSaveButtonClicked()
+            // viewModel.onSaveButtonClicked()
         }
 
         return binding.root
     }
 
-    fun bind(binding: FragmentSingleRecipeBinding) = with(binding) {
+    private fun bind(binding: FragmentSingleRecipeBinding) = with(binding) {
 
-        val recipe = viewModel.getRecipeByIdFromLiveData(idRecipe)
-
-        if (recipe == null) return@with
+        val recipe = viewModel.getRecipeByIdFromLiveData(idRecipe) ?: return@with
 
         toggleButtonFavorit.isChecked = recipe.favorites
         describe.text = recipe.describe
@@ -116,7 +112,7 @@ class SingleRecipeFragment : Fragment() {
         const val INITIAL_RECIPE_KEY = "openSingleRecipe"
 
         fun createBundle(idRecipe: Long?) =
-            Bundle(2).apply {
+            Bundle(1).apply {
                 putLong(INITIAL_RECIPE_KEY, idRecipe ?: 0)
             }
     }

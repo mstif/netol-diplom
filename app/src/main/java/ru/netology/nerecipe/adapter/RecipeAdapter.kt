@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nerecipe.R
 import ru.netology.nerecipe.Recipe
-import ru.netology.nerecipe.Stage
 import ru.netology.nerecipe.databinding.RecipeBinding
 
 
@@ -20,6 +19,7 @@ class RecipeAdapter(
     private val interactionListener: RecipeInteractionListener
 ) : ListAdapter<Recipe, RecipeAdapter.ViewHolder>(DiffCallback) {
     val differ: AsyncListDiffer<Recipe> = AsyncListDiffer(this, DiffCallback)
+
     class ViewHolder(private val binding: RecipeBinding, listener: RecipeInteractionListener) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var recipe: Recipe
@@ -62,19 +62,16 @@ class RecipeAdapter(
             this@ViewHolder.recipe = recipe
             describe.text = recipe.describe
             author.text = recipe.author
-            val imageUrl =recipe.photoRecipe
-           // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
+            val imageUrl = recipe.photoRecipe
             photo.setImageURI(Uri.parse(imageUrl))
             toggleButtonFavorit.isChecked = recipe.favorites
             category.text = recipe.category
-           // recipe.category.also { category.text = it }
             dropdownMenu.setOnClickListener { popupMenu.show() }
             videoGroup.visibility = if (recipe.photoRecipe.isBlank()) View.GONE else View.VISIBLE
 
 
         }
     }
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -99,7 +96,7 @@ class RecipeAdapter(
         }
 
         override fun areContentsTheSame(oldItem: Recipe, newItem: Recipe): Boolean {
-            return  (oldItem.describe == newItem.describe &&
+            return (oldItem.describe == newItem.describe &&
                     oldItem.stages == newItem.stages &&
                     oldItem.category == newItem.category &&
                     oldItem.favorites == newItem.favorites

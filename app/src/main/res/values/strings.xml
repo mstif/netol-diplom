@@ -15,6 +15,13 @@
     <string name="search_text">"Search recipe"</string>
     <string name="kitchen">"kitchen"</string>
     <string name="Choice_Category">Choice category</string>
+    <string name="button_title_ok">OK</string>
+    <string name="recipe_editing">Recipe editing…</string>
+    <string name="recipe_describe">Recipe describe…</string>
+    <string name="recipe_save">Recipe save</string>
+    <string name="editing_stage">Editing stage</string>
+    <string name="stage_num_title">Stage №</string>
+    <string name="set_picture">Set picture</string>
     <string-array name="categories">
         <item>European</item>
         <item>Asian</item>

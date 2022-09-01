@@ -6,12 +6,12 @@
     <string name="remove">Удалить</string>
     <string name="menu_edit">Изменить</string>
     <string name="description_recipe_save">Сохранить</string>
-    <string name="hello_blank_fragment" translatable="false">Hello blank fragment</string>
+    <string name="hello_blank_fragment" translatable="false">Пустой</string>
     <string name="ToFavorites">В избранное</string>
     <string name="Favorites">Избранное</string>
     <string name="add_recipe">Добавить рецепт</string>
     <string name="FavoritesLabel">В избранном</string>
-    <string name="all_recipes">All recipes</string>
+    <string name="all_recipes">Все рецепты</string>
     <string-array name="categories">
         <item>Европейская</item>
         <item>Азиатская</item>
@@ -23,5 +23,12 @@
     </string-array>
     <string name="search_text">Поиск рецептов</string>
     <string name="kitchen">"кухня"</string>
-    <string name="Choice_Category">Choice category</string>
+    <string name="Choice_Category">Выбор категории</string>
+    <string name="button_title_ok">Ok</string>
+    <string name="recipe_editing">Редактирование…</string>
+    <string name="recipe_describe">Описание</string>
+    <string name="recipe_save">Сохранение рецепта</string>
+    <string name="editing_stage">Редактирование шага</string>
+    <string name="stage_num_title">Шаг №</string>
+    <string name="set_picture">Установить изображение</string>
 </resources>

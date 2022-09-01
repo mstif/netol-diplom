@@ -5,7 +5,6 @@ import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.netology.nerecipe.Condition
 import ru.netology.nerecipe.Recipe
-import ru.netology.nerecipe.Stage
 
 
 fun RecipeEntity.toModel() = Recipe(
@@ -13,8 +12,7 @@ fun RecipeEntity.toModel() = Recipe(
     describe = describe,
     author = author,
     photoRecipe = photoRecipe,
-    //stages = listOf<Stage>(),
-    stages = if(stages.isNullOrBlank()) listOf<Stage>() else Json.decodeFromString(stages),
+    stages = if (stages.isBlank()) listOf() else Json.decodeFromString(stages),
     favorites = favorites,
     category = category,
     indexOrder = indexOrder

@@ -111,6 +111,7 @@
         android:layout_marginEnd="@dimen/common_spacing"
         android:layout_marginBottom="92dp"
         android:contentDescription="@string/add_recipe"
+        android:tooltipText="Add stage recipe"
         app:backgroundTint="@color/purple_200"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

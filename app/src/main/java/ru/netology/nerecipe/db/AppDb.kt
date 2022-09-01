@@ -7,23 +7,24 @@ import androidx.room.RoomDatabase
 
 
 @Database(
-    entities = [RecipeEntity::class,ConditionEntity::class],
+    entities = [RecipeEntity::class, ConditionEntity::class],
     version = 1
 )
-abstract  class AppDb:RoomDatabase() {
-   abstract  val recipeDao: RecipeDao
+abstract class AppDb : RoomDatabase() {
+    abstract val recipeDao: RecipeDao
 
     companion object {
         @Volatile
         private var instance: AppDb? = null
         fun getInstance(context: Context): AppDb {
-            return instance?: synchronized(this){
-                instance?: buildDatabase(context).also { instance = it }
+            return instance ?: synchronized(this) {
+                instance ?: buildDatabase(context).also { instance = it }
             }
         }
-        private fun buildDatabase(context:Context) =
-            Room.databaseBuilder(context,AppDb::class.java,"app.db").allowMainThreadQueries().build()
 
+        private fun buildDatabase(context: Context) =
+            Room.databaseBuilder(context, AppDb::class.java, "app.db").allowMainThreadQueries()
+                .build()
 
 
     }

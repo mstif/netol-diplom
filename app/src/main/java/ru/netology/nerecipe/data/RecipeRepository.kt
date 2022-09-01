@@ -8,21 +8,20 @@ import ru.netology.nerecipe.Stage
 import x.y.z.SingleLiveEvent
 
 interface RecipeRepository {
-    val data: LiveData< List<Recipe>>
-    val sharePostContent:SingleLiveEvent<String>
-    val currentRecipe:MutableLiveData<Recipe?>
-    val currentStage:MutableLiveData<Stage?>
-    val stages:MutableLiveData < List<Stage>>
-   // val stages: List<Stage>
-   // val currentSinglePost:MutableLiveData<Post?>
-    fun like(id:Long)
+    val data: LiveData<List<Recipe>>
+    val sharePostContent: SingleLiveEvent<String>
+    val currentRecipe: MutableLiveData<Recipe?>
+    val currentStage: MutableLiveData<Stage?>
+    val stages: MutableLiveData<List<Stage>>
+    fun like(id: Long)
     fun delete(id: Long)
 
     fun save(recipe: Recipe)
-    fun getRecipeById(id:Long): Recipe?
+    fun getRecipeById(id: Long): Recipe?
     fun onMoveItem(to: Int, from: Int, recipeToId: Long, recipeFromId: Long)
-    fun nextIdStages():Long
-    companion object{
+    fun nextIdStages(): Long
+
+    companion object {
         const val NEW_RECIPE_ID = 0L
     }
 }

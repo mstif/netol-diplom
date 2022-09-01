@@ -13,40 +13,6 @@ data class Recipe(
     val photoRecipe: String = "",
     val indexOrder: Long = 0
 ) {
-    companion object {
-        fun demoDataRecipe(): List<Recipe> {
-            return List(10) { index ->
 
-                Recipe(
-                    id = index.toLong(),
-                    describe = "$index Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                    author = "$index Всемирная ассоциация любителей поесть",
-                    favorites = false,
-
-                   // photoRecipe = "content://com.android.providers.media.documents/document/image%3A27",
-                    category = "Russian",
-                    indexOrder = index.toLong()
-                )
-
-
-            } + List(10) { index ->
-
-                Recipe(
-                    id = 10 + index.toLong(),
-                    describe = "$index Lorem Ipsum is simply dummy text of the printing and typesetting industry.",
-                    author = "$index Всемирная ассоциация любителей поесть",
-                    favorites = false,
-
-                    photoRecipe = "content://com.android.providers.media.documents/document/image%3A27",
-                    category = "Eastern",
-                    indexOrder = 10 + index.toLong()
-                )
-
-
-            }
-
-
-        }
-    }
 }
 

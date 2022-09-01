@@ -10,19 +10,18 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import ru.netology.nerecipe.R
-import ru.netology.nerecipe.Recipe
 import ru.netology.nerecipe.Stage
-import ru.netology.nerecipe.databinding.RecipeBinding
 import ru.netology.nerecipe.databinding.StageBinding
 
 
 class StageAdapter(
 
     private val interactionListener: StageInteractionListener,
-    private val isEdit:Boolean=false,
+    private val isEdit: Boolean = false,
 
-) : ListAdapter<Stage, StageAdapter.ViewHolder>(DiffCallback) {
+    ) : ListAdapter<Stage, StageAdapter.ViewHolder>(DiffCallback) {
     val differ: AsyncListDiffer<Stage> = AsyncListDiffer(this, DiffCallback)
+
     class ViewHolder(private val binding: StageBinding, listener: StageInteractionListener) :
         RecyclerView.ViewHolder(binding.root) {
         private lateinit var stage: Stage
@@ -47,22 +46,20 @@ class StageAdapter(
         }
 
 
-
         fun bind(stage: Stage) = with(binding) {
             this@ViewHolder.stage = stage
             textStage.text = stage.content
             stageNumber.text = stage.position.toString()
-            val imageUrl =stage.photo
-           // val imageUrl = "content://com.android.providers.media.documents/document/image%3A27"
+            val imageUrl = stage.photo
             photo.setImageURI(Uri.parse(imageUrl))
-            stageNumber.setText((absoluteAdapterPosition+1).toString())
+            val pos = absoluteAdapterPosition + 1
+            stageNumber.text = pos.toString()
             dropdownMenu.setOnClickListener { popupMenu.show() }
             photo.visibility = if (stage.photo.isBlank()) View.GONE else View.VISIBLE
 
 
         }
     }
-
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

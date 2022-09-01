@@ -15,27 +15,36 @@ interface RecipeDao {
     @Query("SELECT * FROM recipes WHERE id=:id")
     fun getRecipeById(id: Long): RecipeEntity?
 
-
     @Insert
-    fun insertRecipe(recipe: RecipeEntity):Long
-
-
+    fun insertRecipe(recipe: RecipeEntity): Long
 
     @Query("UPDATE recipes SET indexOrder = id WHERE rowid = :rowId")
     fun updateRecipeIndexOrderAfterInsert(rowId: Long)
 
-    fun insert(recipe: RecipeEntity){
-       val rowId = insertRecipe(recipe)
+    fun insert(recipe: RecipeEntity) {
+        val rowId = insertRecipe(recipe)
         updateRecipeIndexOrderAfterInsert(rowId)
     }
 
     @Query("UPDATE recipes SET describe = :describe, category=:category, photoRecipe = :photoRecipe, stages = :stages WHERE id = :id")
-    fun updateRecipeById(id: Long, describe: String, photoRecipe: String, stages: String, category:String)
+    fun updateRecipeById(
+        id: Long,
+        describe: String,
+        photoRecipe: String,
+        stages: String,
+        category: String
+    )
 
 
     fun save(recipe: RecipeEntity) =
         if (recipe.id == RecipeRepository.NEW_RECIPE_ID) insert(recipe) else
-            updateRecipeById(recipe.id, recipe.describe, recipe.photoRecipe, recipe.stages,recipe.category)
+            updateRecipeById(
+                recipe.id,
+                recipe.describe,
+                recipe.photoRecipe,
+                recipe.stages,
+                recipe.category
+            )
 
     @Query(
         """
@@ -56,8 +65,6 @@ interface RecipeDao {
     """
     )
     fun reorderItems(direction: Int, idItem: Long)
-    
-    // get id stages
 
     @Query("SELECT maxIdStages FROM condition ")
     fun getMaxIdofStages(): Long?
@@ -68,13 +75,13 @@ interface RecipeDao {
     @Query("UPDATE condition SET maxIdStages = :idStage WHERE id = 'default'")
     fun updateConditionDefault(idStage: Long)
 
-    fun updateIdStages(id: Long) =
+    private fun updateIdStages(id: Long) =
         if (getMaxIdofStages() == null) insert(Condition().toEntity()) else
             updateConditionDefault(id)
 
 
-    fun nextIdStages():Long{
-        val id = (getMaxIdofStages()?:0L) + 1L
+    fun nextIdStages(): Long {
+        val id = (getMaxIdofStages() ?: 0L) + 1L
         updateIdStages(id)
         return id
     }

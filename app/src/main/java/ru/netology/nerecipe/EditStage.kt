@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.setFragmentResult
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
@@ -19,7 +18,7 @@ class EditStage : Fragment() {
 
     private var idStage: Long = 0L
     private lateinit var stage: Stage
-    val viewModel: RecipeViewModel by viewModels<RecipeViewModel>(ownerProducer = ::requireParentFragment)
+    private val viewModel: RecipeViewModel by viewModels(ownerProducer = ::requireParentFragment)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,17 +38,16 @@ class EditStage : Fragment() {
         val idRecipe = viewModel.currentRecipe.value?.id
         val listStages = viewModel.getRecipeByIdFromLiveData(idRecipe)?.stages
 
-        if (idStage == 0L) {
+        stage = if (idStage == 0L) {
             val maxPosition =
                 if (listStages.isNullOrEmpty()) 0 else listStages.maxOf { it.position } + 1
-            stage = (listStages?.find { it.id == idStage } ?: Stage()).copy(
+            (listStages?.find { it.id == idStage } ?: Stage()).copy(
                 position = maxPosition,
                 id = viewModel.nextIdStages()
             )
         } else {
-            stage = listStages?.find { it.id == idStage } ?: Stage()
+            listStages?.find { it.id == idStage } ?: Stage()
         }
-
 
         val binding =
             FragmentEditStageBinding.inflate(layoutInflater, container, false).also { binding ->
@@ -106,13 +104,13 @@ class EditStage : Fragment() {
         return uri
     }
 
-    fun getCurrentPosition(): Int {
+    private fun getCurrentPosition(): Int {
         val stages = viewModel.dataStages.value?.sortedBy { it.position }
         if (idStage == 0L) return (stages?.size ?: 0) + 1
         return (stages?.indexOfFirst { it.id == idStage } ?: 0) + 1
     }
 
-    fun bind(binding: FragmentEditStageBinding) = with(binding) {
+    private fun bind(binding: FragmentEditStageBinding) = with(binding) {
         val stagePosition = getCurrentPosition()
         stageNumber.text = stagePosition.toString()
         textStageEdit.setText(stage.content)

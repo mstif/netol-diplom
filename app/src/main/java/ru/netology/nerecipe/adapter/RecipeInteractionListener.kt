@@ -8,6 +8,6 @@ interface RecipeInteractionListener {
     fun onDeleteClicked(recipe: Recipe)
     fun onEditClicked(recipe: Recipe)
     fun onNavigateClicked(recipe: Recipe)
-    fun onChangeFilters(filter:FilterFeed?)
+    fun onChangeFilters(filter: FilterFeed?)
 
 }
