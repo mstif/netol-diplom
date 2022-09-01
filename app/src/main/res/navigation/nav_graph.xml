@@ -28,7 +28,17 @@
         android:id="@+id/feedFavoritesFragment"
         android:name="ru.netology.nerecipe.FeedFavoritesFragment"
         android:label="fragment_favorites_feed"
-        tools:layout="@layout/fragment_favorites_feed" />
+        tools:layout="@layout/fragment_favorites_feed" >
+        <action
+            android:id="@+id/action_feedFavoritesFragment_to_editRecipe"
+            app:destination="@id/editRecipe" />
+        <action
+            android:id="@+id/action_feedFavoritesFragment_to_singleRecipe"
+            app:destination="@id/singleRecipe" />
+        <action
+            android:id="@+id/action_feedFavoritesFragment_to_categoryFeed"
+            app:destination="@id/categoryFeed" />
+    </fragment>
     <fragment
         android:id="@+id/categoryFeed"
         android:name="ru.netology.nerecipe.CategoryFeed"

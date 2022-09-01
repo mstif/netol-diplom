@@ -64,7 +64,7 @@ class SingleRecipeFragment : Fragment() {
 
         setFragmentResultListener(requestKey = EditRecipe.REQUEST_KEY_CHAHGE) { requestKey, bundle ->
             if (requestKey != EditRecipe.REQUEST_KEY_CHAHGE) return@setFragmentResultListener
-            viewModel.onSaveButtonClicked()
+           // viewModel.onSaveButtonClicked()
         }
 
         return binding.root

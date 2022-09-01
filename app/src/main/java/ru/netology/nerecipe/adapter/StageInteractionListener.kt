@@ -8,8 +8,8 @@ interface StageInteractionListener {
 
     fun onDeleteClicked(stage: Stage)
     fun onEditClicked(stage: Stage)
-    fun onNavigateClicked(stage: Stage)
-    fun onSetImage(uri : String)
+
+
 
 
 

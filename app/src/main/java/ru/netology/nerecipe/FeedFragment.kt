@@ -86,7 +86,7 @@ class FeedFragment : Fragment() {
 
         viewModel.dataViewModel.observe(viewLifecycleOwner) { recipes ->
             // adapter.submitList(recipes)
-            val filteredResult = viewModel.getFilteredResultNew()
+            val filteredResult = viewModel.getFilteredResult()
             adapter.submitList(filteredResult)
             adapter.differ.submitList(filteredResult)
             binding.emptyPic.visibility = if (filteredResult.isEmpty()) View.VISIBLE else View.GONE
@@ -184,7 +184,7 @@ class FeedFragment : Fragment() {
         viewModel.filter.value = FilterFeed("", List<Int>(categoriesList.size) { index -> index })
 
         viewModel.filter.observe(this) {
-            val filteredResult = viewModel.getFilteredResultNew()
+            val filteredResult = viewModel.getFilteredResult()
             adapter.submitList(filteredResult)
         }
 
