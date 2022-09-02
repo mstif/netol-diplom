@@ -13,7 +13,7 @@
     <string name="FavoritesLabel">Favorites</string>
     <string name="all_recipes">All recipes</string>
     <string name="search_text">"Search recipe"</string>
-    <string name="kitchen">"kitchen"</string>
+    <string name="kitchen">"cuisine"</string>
     <string name="Choice_Category">Choice category</string>
     <string name="button_title_ok">OK</string>
     <string name="recipe_editing">Recipe editing…</string>
