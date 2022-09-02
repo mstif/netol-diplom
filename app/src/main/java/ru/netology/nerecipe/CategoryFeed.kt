@@ -24,7 +24,7 @@ class CategoryFeed : Fragment() {
     ): View =
         FragmentCategoryFeedBinding.inflate(layoutInflater, container, false).also { binding ->
 
-            val nameList = resources.getStringArray(R.array.categories)
+            val nameList = FeedFragment.serviceRecipes.categoriesList
             var id = 0
             nameList.forEach {
                 val chip = createChip(it)
@@ -48,14 +48,12 @@ class CategoryFeed : Fragment() {
         {
 
             val checkedIds = binding.chipGroup.checkedChipIds
-            if (checkedIds.isNotEmpty()) {
-                val resultBundle = Bundle(1)
-                resultBundle.putIntegerArrayList(
-                    FeedFragment.RESULT_CATEGORY_KEY,
-                    checkedIds as ArrayList<Int>
-                )
-                setFragmentResult(requestKey = FeedFragment.REQUEST_CATEGORY_KEY, resultBundle)
-            }
+            val resultBundle = Bundle(1)
+            resultBundle.putIntegerArrayList(
+                FeedFragment.RESULT_CATEGORY_KEY,
+                checkedIds as ArrayList<Int>
+            )
+            setFragmentResult(requestKey = FeedFragment.REQUEST_CATEGORY_KEY, resultBundle)
             findNavController().popBackStack()
         }
 

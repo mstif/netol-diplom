@@ -16,7 +16,7 @@ class RecipeEntity(
     val favorites: Boolean = false,
     val stages: String = "",
     val photoRecipe: String = "",
-    val category: String = "",
+    val category: Int = 0,
     val indexOrder: Long = 0L
 )
 

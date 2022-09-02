@@ -32,7 +32,7 @@ interface RecipeDao {
         describe: String,
         photoRecipe: String,
         stages: String,
-        category: String
+        category: Int
     )
 
 

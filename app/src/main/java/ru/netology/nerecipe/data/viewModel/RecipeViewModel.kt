@@ -85,7 +85,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
 
             })
         } else {
-            if (searchCategory != null && searchCategory.isNotEmpty())
+            if (searchCategory != null)
                 filtered.addAll(recipes.filter {
                     searchCategory.contains(
                         listAllCategories.indexOf(

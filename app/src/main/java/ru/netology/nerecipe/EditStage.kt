@@ -35,8 +35,6 @@ class EditStage : Fragment() {
         savedInstanceState: Bundle?
     ): View {
         // Inflate the layout for this fragment
-        //val listStages = viewModel.currentRecipe.value?.stages
-        //val idRecipe = viewModel.currentRecipe.value?.id
         //Get list stages from memory
         val listStages = viewModel.currentRecipe.value?.stages
 

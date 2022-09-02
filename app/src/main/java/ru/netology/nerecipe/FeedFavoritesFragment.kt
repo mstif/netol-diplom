@@ -181,7 +181,6 @@ class FeedFavoritesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val categoriesList = resources.getStringArray(R.array.categories).toList()
-        viewModel.listAllCategories = categoriesList
         viewModel.filter.value = FilterFeed("", List(categoriesList.size) { index -> index })
 
         viewModel.filter.observe(this) {

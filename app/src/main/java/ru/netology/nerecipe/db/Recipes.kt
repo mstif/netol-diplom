@@ -4,6 +4,7 @@ import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import ru.netology.nerecipe.Condition
+import ru.netology.nerecipe.FeedFragment
 import ru.netology.nerecipe.Recipe
 
 
@@ -14,7 +15,7 @@ fun RecipeEntity.toModel() = Recipe(
     photoRecipe = photoRecipe,
     stages = if (stages.isBlank()) listOf() else Json.decodeFromString(stages),
     favorites = favorites,
-    category = category,
+    category = FeedFragment.serviceRecipes.getCategoryById(category),
     indexOrder = indexOrder
 )
 
@@ -26,7 +27,7 @@ fun Recipe.toEntity() = RecipeEntity(
     photoRecipe = photoRecipe,
     stages = Json.encodeToString(stages),
     favorites = favorites,
-    category = category,
+    category = FeedFragment.serviceRecipes.getIdbyCategory(category),
     indexOrder = indexOrder
 )
 

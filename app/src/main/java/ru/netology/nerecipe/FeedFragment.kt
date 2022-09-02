@@ -17,6 +17,7 @@ import ru.netology.nerecipe.adapter.RecipeAdapter
 import ru.netology.nerecipe.data.RecipeRepository
 import ru.netology.nerecipe.data.viewModel.RecipeViewModel
 import ru.netology.nerecipe.databinding.FragmentFeedBinding
+import ru.netology.nerecipe.ui.AppActivity
 
 
 class FeedFragment : Fragment() {
@@ -123,7 +124,7 @@ class FeedFragment : Fragment() {
                 val searchView = searchMenuItem.actionView as SearchView
                 val textView = resources.getString(R.string.search_text)
                 searchView.queryHint = textView
-                val categoriesList = resources.getStringArray(R.array.categories).toList()
+                val categoriesList = serviceRecipes.categoriesList
                 searchView.setOnQueryTextListener(object :
                     SearchView.OnQueryTextListener {
                     override fun onQueryTextSubmit(searchText: String?): Boolean {
@@ -177,7 +178,8 @@ class FeedFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val categoriesList = resources.getStringArray(R.array.categories).toList()
+        val categoriesList = getCategoryFilters()
+        serviceRecipes.categoriesList = categoriesList
         viewModel.listAllCategories = categoriesList
         viewModel.filter.value = FilterFeed("", List(categoriesList.size) { index -> index })
 
@@ -204,12 +206,20 @@ class FeedFragment : Fragment() {
     }
 
 
-
     companion object {
         const val RESULT_CATEGORY_KEY = "resultCategoryKey"
         const val REQUEST_CATEGORY_KEY = "requestCategoryKey"
 
 
+    }
+
+    object serviceRecipes {
+        var categoriesList: List<String> = listOf()
+        fun getIdbyCategory(category: String) = categoriesList.indexOf(category)
+        fun getCategoryById(id: Int) = categoriesList[id]
 
     }
+
+    fun getCategoryFilters() = resources.getStringArray(R.array.categories).toList()
+
 }
