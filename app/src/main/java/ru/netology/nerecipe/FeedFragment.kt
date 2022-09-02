@@ -203,6 +203,8 @@ class FeedFragment : Fragment() {
 
     }
 
+
+
     companion object {
         const val RESULT_CATEGORY_KEY = "resultCategoryKey"
         const val REQUEST_CATEGORY_KEY = "requestCategoryKey"

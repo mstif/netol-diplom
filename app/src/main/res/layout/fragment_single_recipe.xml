@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
 
     >
     <androidx.appcompat.widget.AppCompatImageView
@@ -24,8 +24,8 @@
 
     <ImageView
         android:id="@+id/top_avatar"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
         android:layout_marginStart="@dimen/common_spacing"
         android:layout_marginTop="@dimen/common_spacing"
         android:contentDescription="@string/descr_avatar"
@@ -40,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="@dimen/common_spacing"
         android:layout_marginEnd="@dimen/common_spacing"
+        android:textSize="@dimen/author_text_size"
         android:ellipsize="end"
         android:singleLine="true"
 
@@ -132,12 +133,13 @@
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_margin="@dimen/common_spacing"
+        android:layout_height="0dp"
+        android:layout_margin="4dp"
         android:background="@color/peach"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toggleButtonFavorit"
+       app:layout_constraintBottom_toBottomOf="parent"
         tools:listitem="@layout/stage"
 />
 

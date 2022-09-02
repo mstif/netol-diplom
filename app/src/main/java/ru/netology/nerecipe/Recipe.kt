@@ -12,7 +12,7 @@ data class Recipe(
     val category: String = "",
     val photoRecipe: String = "",
     val indexOrder: Long = 0
-) {
+)
 
-}
+
 

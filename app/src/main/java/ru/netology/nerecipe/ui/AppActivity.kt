@@ -3,10 +3,12 @@ package ru.netology.nerecipe.ui
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.NotificationCompat.getCategory
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import ru.netology.nerecipe.R
+import ru.netology.nerecipe.Recipe
 
 class AppActivity : AppCompatActivity(R.layout.app_activity) {
 
@@ -29,4 +31,12 @@ class AppActivity : AppCompatActivity(R.layout.app_activity) {
         }
 
     }
+
+//    fun getCategory():String{
+//        val categoriesList = resources.getStringArray(R.array.categories).toList()
+//        return ""
+//    }
+//    companion object{
+//        val categoriesList:List<String> = getCategory()   }
+
 }

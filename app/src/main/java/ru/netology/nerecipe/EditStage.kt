@@ -36,8 +36,9 @@ class EditStage : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         //val listStages = viewModel.currentRecipe.value?.stages
-        val idRecipe = viewModel.currentRecipe.value?.id
-        val listStages = viewModel.getRecipeByIdFromLiveData(idRecipe)?.stages
+        //val idRecipe = viewModel.currentRecipe.value?.id
+        //Get list stages from memory
+        val listStages = viewModel.currentRecipe.value?.stages
 
         stage = if (idStage == 0L) {
             val maxPosition =

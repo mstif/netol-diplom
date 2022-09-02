@@ -82,6 +82,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
             filtered.addAll(recipes.filter {
                 it.describe.lowercase().contains(searchText.lowercase())
                         && searchCategory?.contains(listAllCategories.indexOf(it.category)) ?: true
+
             })
         } else {
             if (searchCategory != null && searchCategory.isNotEmpty())
