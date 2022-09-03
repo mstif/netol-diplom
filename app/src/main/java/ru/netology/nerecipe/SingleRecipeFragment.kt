@@ -43,7 +43,8 @@ class SingleRecipeFragment : Fragment() {
         //observe
 
         viewModel.dataStages.observe(viewLifecycleOwner) { stages ->
-            adapter.submitList(stages)
+            val list = stages.sortedBy { it.position }
+            adapter.submitList(list)
             binding.emptyPovar.visibility =
                 if (stages?.isEmpty() != false) View.VISIBLE else View.GONE
 
