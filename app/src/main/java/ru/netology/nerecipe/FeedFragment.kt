@@ -82,7 +82,7 @@ class FeedFragment : Fragment() {
     ): View = FragmentFeedBinding.inflate(layoutInflater, container, false).also { binding ->
         adapter = RecipeAdapter(viewModel)
         itemTouchHelper.attachToRecyclerView(binding.container)
-        binding.container.adapter = adapter
+        binding.container.adapter =adapter
 
         viewModel.dataViewModel.observe(viewLifecycleOwner) {
             val filteredResult = viewModel.getFilteredResult()

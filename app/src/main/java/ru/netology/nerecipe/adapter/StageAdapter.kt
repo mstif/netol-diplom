@@ -49,7 +49,6 @@ class StageAdapter(
         fun bind(stage: Stage) = with(binding) {
             this@ViewHolder.stage = stage
             textStage.text = stage.content
-            stageNumber.text = stage.position.toString()
             val imageUrl = stage.photo
             photo.setImageURI(Uri.parse(imageUrl))
             val pos = absoluteAdapterPosition + 1

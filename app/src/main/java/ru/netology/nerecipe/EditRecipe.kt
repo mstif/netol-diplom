@@ -108,7 +108,7 @@ class EditRecipe : Fragment() {
 
         itemTouchHelper.attachToRecyclerView(binding.container)
         binding.fabStage.setOnClickListener {
-            viewModel.currentRecipe.value = recipe
+            viewModel.currentRecipe.value = viewModel.currentRecipe.value ?: Recipe()
             viewModel.onAddStageClicked()
         }
 
@@ -131,6 +131,14 @@ class EditRecipe : Fragment() {
             findNavController().popBackStack()
         }
 
+        setAdapter(binding)
+
+        viewModel.dataStages.value = recipe.stages
+
+    }.root
+
+    fun setAdapter(binding: FragmentEditRecipeBinding){
+
         val adapter = StageAdapter(viewModel, true)
 
         binding.container.adapter = adapter
@@ -140,11 +148,14 @@ class EditRecipe : Fragment() {
             adapter.submitList(list)
             adapter.differ.submitList(list)
             binding.emptyPovar.visibility = if (list.isEmpty()) View.VISIBLE else View.GONE
+
+        }
+        viewModel.DeleteStageSingle.observe(viewLifecycleOwner) { recipe ->
+           setAdapter(binding)
         }
 
-        viewModel.dataStages.value = recipe.stages
 
-    }.root
+    }
 
     private fun bind(binding: FragmentEditRecipeBinding) = with(binding) {
 

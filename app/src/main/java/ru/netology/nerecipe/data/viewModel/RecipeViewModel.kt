@@ -27,7 +27,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
     val navigateToRecipeScreenEvent = SingleLiveEvent<Recipe?>() //editing recipe
     val navigateToStageScreenEvent = SingleLiveEvent<Stage?>() //editing stage
     val navigateToRecipeSingle = SingleLiveEvent<Recipe>() // open single recipe
-
+    val DeleteStageSingle = SingleLiveEvent<Recipe?>()
     val filter = SingleLiveEvent<FilterFeed>()  //change filters
     var listAllCategories = listOf<String>()
     val currentRecipe by repository::currentRecipe //current recipe
@@ -151,6 +151,7 @@ class RecipeViewModel(application: Application) : AndroidViewModel(application),
         val recipe = currentRecipe.value?.copy(stages = stages ?: listOf())
         currentRecipe.value = recipe
         dataStages.value = stages
+        DeleteStageSingle.call()
         //onSaveButtonClicked()
 
     }
